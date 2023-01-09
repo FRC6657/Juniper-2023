@@ -16,6 +16,7 @@ public class Drivetrain extends SubsystemBase {
   WPI_TalonFX mFrontLeft;
   WPI_TalonFX mBackRight;
   WPI_TalonFX mBackLeft;
+  WPI_TalonFX mTest;
 
 
   public Drivetrain() {
@@ -24,6 +25,7 @@ public class Drivetrain extends SubsystemBase {
     mFrontRight = new WPI_TalonFX(2, "rio");
     mBackRight = new WPI_TalonFX(3, "rio");
     mBackLeft = new WPI_TalonFX(4, "rio");
+    mTest = new WPI_TalonFX(5, "rio");
     
     mFrontRight.setNeutralMode(NeutralMode.Brake);
     mFrontLeft.setNeutralMode(NeutralMode.Brake);
@@ -37,7 +39,16 @@ public class Drivetrain extends SubsystemBase {
     mFrontRight.set(-xPower + yPower + zPower);
     mBackLeft.set(xPower -yPower + zPower);
     mBackRight.set(-xPower -yPower + zPower);
+   
 
+  }
+
+  public void testMotor(double speed) {
+    mTest.set(speed);
+  }
+
+  public void stopMotor() {
+    mTest.set(0);
   }
   
 

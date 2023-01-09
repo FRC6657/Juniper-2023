@@ -5,24 +5,36 @@
 package frc.robot;
 
 import frc.robot.commands.DriverControl;
+import frc.robot.custom.Controller;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import edu.wpi.first.wpilibj.XboxController;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final Drivetrain drivetrain = new Drivetrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final XboxController m_driverController =
-      new XboxController(0);
+  WPI_TalonFX mTest;
+  private Controller m_driverController = new Controller(1);
+  private final Drivetrain drivetrain = new Drivetrain();
+  private final Arm arm = new Arm();
+
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    mTest = new WPI_TalonFX(5, "rio");
+
     // Configure the trigger bindings
     configureBindings();
+  
 
   }
+
+  
  
   private void configureBindings() {
 
@@ -32,7 +44,21 @@ public class RobotContainer {
       ()-> m_driverController.getLeftX() * 0.2, 
       ()-> m_driverController.getRightX() * 0.2));
 
-     }
+
+      m_driverController.a().whenHeld(
+        new InstantCommand(
+          () -> arm.run(-0.2)
+        )
+        ).whenReleased(
+          () -> arm.run(0)
+        );
+     
+
+    }
+
+
+    
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

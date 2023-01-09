@@ -11,6 +11,7 @@ public final class Constants {
     int kFrontRight = 2;
     int kBackRight = 3;
     int kBackLeft = 4;
+    int kArm = 5;
     
   }
 }
