@@ -5,13 +5,14 @@
 package frc.robot;
 
 public final class Constants {
+
   public static class CAN {
 
-    int kFrontLeft = 1;
-    int kFrontRight = 2;
-    int kBackRight = 3;
-    int kBackLeft = 4;
-    int kArm = 5;
+    public static final int kFrontLeft = 1;
+    public static final int kFrontRight = 2;
+    public static final int kBackRight = 3;
+    public static final int kBackLeft = 4;
+    public static final int kArm = 5;
     
   }
 }
