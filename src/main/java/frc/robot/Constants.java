@@ -13,6 +13,8 @@ public final class Constants {
     public static final int kBackRight = 3;
     public static final int kBackLeft = 4;
     public static final int kArm = 5;
+    public static final int kLeftClaw = 6;
+    public static final int kRightClaw = 7;
     
   }
 }

@@ -1,13 +1,10 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-
+import frc.robot.subsystems.Flipper;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,8 +13,11 @@ public class RobotContainer {
 
   private CommandXboxController mDriver = new CommandXboxController(0);
   private CommandXboxController mOperator = new CommandXboxController(1);
+
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
+  private final Flipper flipper = new Flipper();
+  private final Claw claw = new Claw();
 
 
 
@@ -29,15 +29,14 @@ public class RobotContainer {
 
   }
 
-  
  
   private void configureBindings() {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-      ()-> mDriver.getLeftY(), 
-      ()-> mDriver.getLeftX(), 
-      ()-> mDriver.getRightX()));
+        ()-> mDriver.getLeftY(), 
+        ()-> mDriver.getLeftX(), 
+        ()-> mDriver.getRightX()));
 
       mDriver.b().whileTrue(
         new StartEndCommand(
