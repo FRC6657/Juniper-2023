@@ -10,7 +10,7 @@ public class Flipper extends SubsystemBase{
     private final WPI_TalonSRX mFlipper; 
 
     public Flipper() {
-        mFlipper = new WPI_TalonSRX(8);
+        mFlipper = new WPI_TalonSRX(Constants.CAN.kFlipper);
     
     }
 

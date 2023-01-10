@@ -56,7 +56,7 @@ public class RobotContainer {
       
       mOperator.b().toggleOnTrue(
         new StartEndCommand(
-          () -> flipper.run(0.5),
+          () -> flipper.run(0.25),
           flipper::stop,
           flipper
         )
