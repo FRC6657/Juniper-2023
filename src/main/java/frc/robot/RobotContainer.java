@@ -8,23 +8,20 @@ import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
-  WPI_TalonFX mTest;
-  private XboxController mDriver = new XboxController(0);
+  private CommandXboxController mDriver = new CommandXboxController(0);
+  private CommandXboxController mOperator = new CommandXboxController(1);
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
 
 
 
   public RobotContainer() {
-
-    mTest = new WPI_TalonFX(5, "rio");
 
     
     configureBindings();
@@ -41,6 +38,22 @@ public class RobotContainer {
       ()-> mDriver.getLeftY(), 
       ()-> mDriver.getLeftX(), 
       ()-> mDriver.getRightX()));
+
+      mDriver.b().whileTrue(
+        new StartEndCommand(
+          () -> arm.run(.5),
+          () -> arm.run(0),
+          arm
+        )
+      );
+
+      mOperator.a().toggleOnTrue(
+        new StartEndCommand(
+          () -> arm.run(0.5),
+          () -> arm.run(0),
+          arm
+        )
+      );
       
     }
 
