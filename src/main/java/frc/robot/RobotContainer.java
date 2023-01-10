@@ -54,6 +54,13 @@ public class RobotContainer {
         )
       );
       
+      mOperator.b().toggleOnTrue(
+        new StartEndCommand(
+          () -> flipper.run(0.5),
+          flipper::stop,
+          flipper
+        )
+      );
     }
 
 
