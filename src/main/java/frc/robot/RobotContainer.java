@@ -39,15 +39,8 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getLeftX(), 0.05), 
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.05)));
 
-      mDriver.b().whileTrue(
-        new StartEndCommand(
-          () -> arm.run(.5),
-          () -> arm.run(0),
-          arm
-        )
-      );
 
-      mOperator.a().toggleOnTrue(
+      mDriver.a().toggleOnTrue(
         new StartEndCommand(
           () -> arm.run(0.5),
           () -> arm.run(0),
@@ -55,7 +48,7 @@ public class RobotContainer {
         )
       );
       
-      mOperator.b().whileTrue(
+      mDriver.b().whileTrue(
         new StartEndCommand(
           () -> flipper.run(0.25),
           flipper::stop,
@@ -63,12 +56,26 @@ public class RobotContainer {
         )
       );
 
-      mOperator.b().whileTrue(
+      mOperator.x().whileTrue(
         new StartEndCommand(
           () -> flipper.run(-0.25),
           flipper::stop,
           flipper
         )
+      );
+
+      mOperator.a().whileTrue(
+        new StartEndCommand(
+          claw::foward, 
+          claw::stop, 
+          claw)
+      );
+
+      mOperator.b().whileTrue(
+        new StartEndCommand(
+          claw::reverse, 
+          claw::stop, 
+          claw)
       );
 
     }

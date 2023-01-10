@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Flipper extends SubsystemBase{
     
-    private final WPI_TalonSRX mFlipper; 
+    private final Spark mFlipper;
 
     public Flipper() {
-        mFlipper = new WPI_TalonSRX(Constants.CAN.kFlipper);
+        mFlipper = new Spark(Constants.CAN.kFlipper);
     
     }
 

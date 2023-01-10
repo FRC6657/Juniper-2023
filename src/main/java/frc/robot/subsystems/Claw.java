@@ -11,18 +11,31 @@ public class Claw extends SubsystemBase{
 
     public Claw() {
         
-        mLeftClaw = new Spark(Constants.CAN.kLeftClaw);
-        mRightClaw = new Spark(Constants.CAN.kRightClaw);
-
+        mLeftClaw = new Spark(10);
+        mRightClaw = new Spark(11);
         //Add pistons
 
     }
 
-    public void intake() {
+    public void foward() {
 
         mLeftClaw.set(0.7);
         mRightClaw.set(-0.7);
-        
+
+    }
+
+    public void reverse() {
+
+        mLeftClaw.set(-0.7);
+        mRightClaw.set(0.7);
+
+    }
+
+    public void stop() {
+
+        mLeftClaw.set(0);
+        mRightClaw.set(0);
+
     }
     
 }
