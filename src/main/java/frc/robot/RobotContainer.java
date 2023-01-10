@@ -5,19 +5,18 @@
 package frc.robot;
 
 import frc.robot.commands.DriverControl;
-import frc.robot.custom.Controller;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
 
   WPI_TalonFX mTest;
-  private Controller mDriver = new Controller(0);
+  private XboxController mDriver = new XboxController(0);
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
 
@@ -42,16 +41,7 @@ public class RobotContainer {
       ()-> mDriver.getLeftY() * 0.2, 
       ()-> mDriver.getLeftX() * 0.2, 
       ()-> mDriver.getRightX() * 0.2));
-
-
-      mDriver.a().whenHeld(
-        new InstantCommand(
-          () -> arm.run(-0.2)
-        )
-        ).whenReleased(
-          () -> arm.run(0)
-        );
-
+      
     }
 
 

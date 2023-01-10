@@ -3,16 +3,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
 
-  WPI_TalonFX mFrontRight;
-  WPI_TalonFX mFrontLeft;
-  WPI_TalonFX mBackRight;
-  WPI_TalonFX mBackLeft;
-  WPI_TalonFX mTest;
+  private final WPI_TalonFX mFrontRight;
+  private final WPI_TalonFX mFrontLeft;
+  private final WPI_TalonFX mBackRight;
+  private final WPI_TalonFX mBackLeft;
+  private final WPI_TalonFX mTest;
 
 
   public Drivetrain() {
@@ -45,4 +44,6 @@ public class Drivetrain extends SubsystemBase {
   public void stopMotor() {
     mTest.set(0);
   }
+
+}
 
