@@ -38,9 +38,9 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-      ()-> mDriver.getLeftY() * 0.2, 
-      ()-> mDriver.getLeftX() * 0.2, 
-      ()-> mDriver.getRightX() * 0.2));
+      ()-> mDriver.getLeftY(), 
+      ()-> mDriver.getLeftX(), 
+      ()-> mDriver.getRightX()));
       
     }
 
@@ -53,5 +53,5 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-
+  
 }
