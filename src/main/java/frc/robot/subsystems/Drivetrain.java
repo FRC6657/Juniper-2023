@@ -43,10 +43,10 @@ public class Drivetrain extends SubsystemBase {
 
   public void Drive(double xPower, double yPower, double zPower) {
 
-    mFrontLeft.set(xPower + yPower + zPower);
-    mFrontRight.set(-xPower + yPower + zPower);
-    mBackLeft.set(xPower -yPower + zPower);
-    mBackRight.set(-xPower -yPower + zPower);
+    mFrontLeft.set(0.7 * (xPower + yPower + zPower));
+    mFrontRight.set(0.7 * (-xPower + yPower + zPower));
+    mBackLeft.set(0.7 * (xPower -yPower + zPower));
+    mBackRight.set(0.7 * (-xPower -yPower + zPower));
    
   }
 
