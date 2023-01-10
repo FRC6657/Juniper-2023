@@ -8,6 +8,7 @@ import frc.robot.subsystems.Flipper;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.custom.controls.deadbander;
 
 public class RobotContainer {
 
@@ -34,9 +35,9 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-        ()-> mDriver.getLeftY(), 
-        ()-> mDriver.getLeftX(), 
-        ()-> mDriver.getRightX()));
+        ()-> deadbander.applyLinearScaledDeadband(mDriver.getLeftY(), 0.2), 
+        ()-> deadbander.applyLinearScaledDeadband(mDriver.getLeftX(), 0.2), 
+        ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.2)));
 
       mDriver.b().whileTrue(
         new StartEndCommand(
