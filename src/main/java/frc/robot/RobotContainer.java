@@ -45,13 +45,13 @@ public class RobotContainer {
       ()-> m_driverController.getRightX() * 0.2));
 
 
-      m_driverController.a().whenHeld(
-        new InstantCommand(
-          () -> arm.run(-0.2)
-        )
-        ).whenReleased(
-          () -> arm.run(0)
-        );
+      // m_driverController.a().whenHeld(
+      //   new InstantCommand(
+      //     () -> arm.run(-0.2)
+      //   )
+      //   ).whenReleased(
+      //     () -> arm.run(0)
+      //   );
      
 
     }
