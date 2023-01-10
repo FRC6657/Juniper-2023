@@ -54,17 +54,25 @@ public class RobotContainer {
         )
       );
       
-      mOperator.b().toggleOnTrue(
+      mOperator.b().whileTrue(
         new StartEndCommand(
           () -> flipper.run(0.25),
           flipper::stop,
           flipper
         )
       );
+
+      mOperator.b().whileTrue(
+        new StartEndCommand(
+          () -> flipper.run(-0.25),
+          flipper::stop,
+          flipper
+        )
+      );
+
     }
 
-
-
+      
 
     
 
@@ -75,4 +83,4 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   
-}
+  }
