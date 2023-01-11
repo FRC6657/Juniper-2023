@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
 
   public static class CAN {
@@ -17,5 +19,14 @@ public final class Constants {
     public static final int kRightClaw = 7;
     public static final int kFlipper = 8;
     public static final int kPigeon = 9;
+  }
+
+  public static class DriveConstants {
+
+    //ENCODERS YAY FUN 
+    public static final double kWheelDiameter = Units.inchesToMeters(6);
+    public static final double kFalconToMeters = Math.PI * kWheelDiameter / 2048 * 10.71; //10.71:1 gearbox
+
+
   }
 }

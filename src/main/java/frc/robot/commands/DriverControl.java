@@ -16,13 +16,16 @@ public class DriverControl extends CommandBase {
   private final DoubleSupplier pXInput; 
   private final DoubleSupplier pYInput;
   private final DoubleSupplier pZInput; 
+  private final Boolean pField;
 
 
-  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier zInput) {
+  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier zInput, boolean fieldRelative) {
     m_Drivetrain = drivetrain;
     pXInput = xInput;
     pYInput = yInput;
     pZInput = zInput;
+    pField = fieldRelative;
+
 
     addRequirements(drivetrain);
   }
@@ -35,14 +38,15 @@ public class DriverControl extends CommandBase {
   @Override
   public void execute() {
 
-    m_Drivetrain.Drive(pXInput.getAsDouble(), pYInput.getAsDouble(), pZInput.getAsDouble());
+    m_Drivetrain.drive(pXInput.getAsDouble(), pYInput.getAsDouble(), pZInput.getAsDouble(), pField);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
 
-    m_Drivetrain.Drive(0, 0, 0);
+    m_Drivetrain.drive(0, 0, 0,true);
 
   }
 

@@ -35,9 +35,10 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-        ()-> deadbander.applyLinearScaledDeadband(mDriver.getLeftY(), 0.05), 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.05), 
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getLeftX(), 0.05), 
-        ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.05)));
+        ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.05), 
+        true));
 
 
       mDriver.a().toggleOnTrue(
