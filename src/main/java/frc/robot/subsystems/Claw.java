@@ -11,22 +11,23 @@ public class Claw extends SubsystemBase{
     public Claw() {
         
         mLeftClaw = new Spark(10);
-        mRightClaw = new Spark(11);
+        mRightClaw = new Spark(12);
+
         //Add pistons
 
     }
 
     public void foward() {
 
-        mLeftClaw.set(0.7);
-        mRightClaw.set(-0.7);
+        mLeftClaw.set(-0.7);
+        mRightClaw.set(0.7);
 
     }
 
     public void reverse() {
 
-        mLeftClaw.set(-0.7);
-        mRightClaw.set(0.7);
+        mLeftClaw.set(0.7);
+        mRightClaw.set(-0.7);
 
     }
 

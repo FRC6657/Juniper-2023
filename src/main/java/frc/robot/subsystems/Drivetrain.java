@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -54,16 +56,24 @@ public class Drivetrain extends SubsystemBase {
     mFrontLeft.setNeutralMode(NeutralMode.Brake);
     mBackRight.setNeutralMode(NeutralMode.Brake);
     mBackLeft.setNeutralMode(NeutralMode.Brake);
+
+    mFrontRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+    mFrontLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+    mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+    mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+
+    mFrontRight.setInverted(true);
+    mBackRight.setInverted(true);
     
-    mFrontLeftPIDController = new PIDController(0.5, 0, 0);
-    mFrontRightPIDController = new PIDController(0.5, 0, 0);
-    mBackLeftPIDController = new PIDController(0.5, 0, 0);
-    mBackRightPIDController = new PIDController(0.5, 0, 0);
+    mFrontLeftPIDController = new PIDController(0, 0, 0);
+    mFrontRightPIDController = new PIDController(0, 0, 0);
+    mBackLeftPIDController = new PIDController(0, 0, 0);
+    mBackRightPIDController = new PIDController(0, 0, 0);
 
     mFrontLeftLocation = new Translation2d(0.286, 0.28);
     mFrontRightLocation = new Translation2d(0.286, -0.28);
     mBackLeftLocation = new Translation2d(-0.286, 0.28);
-    mBackRightLocation = new Translation2d(-0.286, 0.28);
+    mBackRightLocation = new Translation2d(-0.286, -0.28);
 
 
     mKinematics = new MecanumDriveKinematics(
@@ -73,9 +83,22 @@ public class Drivetrain extends SubsystemBase {
       mBackRightLocation);
 
     mOdometry = new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());
-    mFeedForward = new SimpleMotorFeedforward(0.359, 1.2, 0.14);
+    mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
 
     
+
+  }
+
+  @Override
+  public void periodic() {
+
+    SmartDashboard.putNumber("gyro angle", mPigeon.getAngle());
+
+  }
+
+  public void resetGyro() {
+
+    mPigeon.reset();
 
   }
 
@@ -127,6 +150,13 @@ public class Drivetrain extends SubsystemBase {
     mBackLeft.setVoltage(backLeftFeedForward + backLeftOutput);
     mBackRight.setVoltage(backRightFeedForward + backRightOutput);
 
+    SmartDashboard.putNumber("front left", mFrontLeft.get());
+    SmartDashboard.putNumber("front right", mFrontRight.get());
+    SmartDashboard.putNumber("back left", mBackLeft.get());
+    SmartDashboard.putNumber("back right", mBackRight.get());
+    
+    SmartDashboard.putNumber("back right speeds", speeds.rearRightMetersPerSecond);
+
   }
 
   public void easyDrive(double xPower, double yPower, double zPower) {
@@ -138,14 +168,24 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
+  
+  public void stop() {
+
+    mBackRight.set(0);
+    mBackLeft.set(0);
+
+  }
+
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     var mecanumDriveWheelSpeeds =
         mKinematics.toWheelSpeeds(
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, mPigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    mecanumDriveWheelSpeeds.desaturate(3);
     setSpeeds(mecanumDriveWheelSpeeds);
+
+    //5 - motor rpm / 10.71 * .4775 / 60
+
   }
 
   public void updateOdometry() {

@@ -9,7 +9,7 @@ public class Arm extends SubsystemBase {
     private final WPI_TalonFX mMotor;
 
     public Arm() {
-        mMotor = new WPI_TalonFX(Constants.CAN.kArm, "rio");
+        mMotor = new WPI_TalonFX(11, "rio");
     }
 
     public void run(double speed) {

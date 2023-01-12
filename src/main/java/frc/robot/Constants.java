@@ -18,7 +18,7 @@ public final class Constants {
     public static final int kLeftClaw = 6;
     public static final int kRightClaw = 7;
     public static final int kFlipper = 8;
-    public static final int kPigeon = 9;
+    public static final int kPigeon = 5;
   }
 
   public static class DriveConstants {

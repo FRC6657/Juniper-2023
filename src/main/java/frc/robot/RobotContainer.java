@@ -6,8 +6,11 @@ import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.custom.controls.deadbander;
@@ -27,7 +30,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    
+    LiveWindow.disableAllTelemetry();
+
     configureBindings();
   
 
@@ -38,20 +42,20 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.05), 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.05), 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05), 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.05) * 3, 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.05) * 3 , 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05) * 3 , 
         true));
 
+      // CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
+      //   new DriverControl(drivetrain, 
+      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.05), 
+      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.05), 
+      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05)));
+       
+    
 
-      mDriver.x().toggleOnTrue(
-        new InstantCommand(
-          brake::retract,
-          brake
-        )
-      );
-
-      mDriver.y().toggleOnTrue(
+      mOperator.y().toggleOnTrue(
         new InstantCommand(
           brake::extend,
           brake
@@ -74,11 +78,24 @@ public class RobotContainer {
         )
       );
 
+      mDriver.x().whileTrue(
+        new InstantCommand(
+          drivetrain::resetGyro, 
+          drivetrain)
+      );
+
+      // mOperator.x().whileTrue(
+      //   new StartEndCommand(
+      //     claw::foward, 
+      //     claw::stop, 
+      //     claw)
+      // );
+
       mOperator.x().whileTrue(
-        new StartEndCommand(
-          claw::foward, 
-          claw::stop, 
-          claw)
+        new RunCommand(
+          claw::foward,
+          claw
+        )
       );
 
       mOperator.y().whileTrue(
@@ -90,9 +107,17 @@ public class RobotContainer {
 
     }
 
-      
+  
+  public Command getAutonomousCommand(){
 
-    
+    return new DriverControl(
+      drivetrain, 
+      () -> 0.0, 
+      () -> 1, 
+      () -> 0.0, 
+      false);
+
+  }    
 
 
   /**

@@ -19,7 +19,7 @@ public class DriverControl extends CommandBase {
   private final Boolean pField;
 
 
-  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier zInput, boolean fieldRelative) {
+  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier zInput, Boolean fieldRelative) {
     m_Drivetrain = drivetrain;
     pXInput = xInput;
     pYInput = yInput;
@@ -39,7 +39,7 @@ public class DriverControl extends CommandBase {
   public void execute() {
 
     m_Drivetrain.drive(pXInput.getAsDouble(), pYInput.getAsDouble(), pZInput.getAsDouble(), pField);
-
+    //m_Drivetrain.easyDrive(pXInput.getAsDouble(), pYInput.getAsDouble(), pZInput.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
@@ -47,6 +47,7 @@ public class DriverControl extends CommandBase {
   public void end(boolean interrupted) {
 
     m_Drivetrain.drive(0, 0, 0,true);
+    //m_Drivetrain.easyDrive(0, 0, 0);
 
   }
 
