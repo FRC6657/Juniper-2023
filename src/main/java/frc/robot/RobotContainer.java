@@ -2,10 +2,12 @@ package frc.robot;
 
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.custom.controls.deadbander;
@@ -19,6 +21,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Flipper flipper = new Flipper();
   private final Claw claw = new Claw();
+  private final Brake brake = new Brake();
 
 
 
@@ -41,11 +44,17 @@ public class RobotContainer {
         true));
 
 
-      mDriver.a().toggleOnTrue(
-        new StartEndCommand(
-          () -> arm.run(0.5),
-          () -> arm.run(0),
-          arm
+      mDriver.x().toggleOnTrue(
+        new InstantCommand(
+          brake::retract,
+          brake
+        )
+      );
+
+      mDriver.y().toggleOnTrue(
+        new InstantCommand(
+          brake::extend,
+          brake
         )
       );
       
@@ -57,7 +66,7 @@ public class RobotContainer {
         )
       );
 
-      mOperator.x().whileTrue(
+      mDriver.a().whileTrue(
         new StartEndCommand(
           () -> flipper.run(-0.25),
           flipper::stop,
@@ -65,14 +74,14 @@ public class RobotContainer {
         )
       );
 
-      mOperator.a().whileTrue(
+      mOperator.x().whileTrue(
         new StartEndCommand(
           claw::foward, 
           claw::stop, 
           claw)
       );
 
-      mOperator.b().whileTrue(
+      mOperator.y().whileTrue(
         new StartEndCommand(
           claw::reverse, 
           claw::stop, 
