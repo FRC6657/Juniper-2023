@@ -22,27 +22,26 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_TalonFX mBackRight;
   private final WPI_TalonFX mBackLeft;
 
-  private final WPI_Pigeon2 mPigeon = new WPI_Pigeon2(5);
+  private final WPI_Pigeon2 mPigeon;
   
-  private final PIDController mFrontLeftPIDController = new PIDController(0.5, 0, 0);
-  private final PIDController mFrontRightPIDController = new PIDController(0.5, 0, 0);
-  private final PIDController mBackLeftPIDController = new PIDController(0.5, 0, 0);
-  private final PIDController mBackRightPIDController = new PIDController(0.5, 0, 0);
+  private final PIDController mFrontLeftPIDController;
+  private final PIDController mFrontRightPIDController;
+  private final PIDController mBackLeftPIDController;
+  private final PIDController mBackRightPIDController;
 
-  private final Translation2d mFrontLeftLocation = new Translation2d(0.286, 0.28);
-  private final Translation2d mFrontRightLocation = new Translation2d(0.286, -0.28);
-  private final Translation2d mBackLeftLocation = new Translation2d(-0.286, 0.28);
-  private final Translation2d mBackRightLocation = new Translation2d(-0.286, 0.28);
+  private final Translation2d mFrontLeftLocation;
+  private final Translation2d mFrontRightLocation;
+  private final Translation2d mBackLeftLocation;
+  private final Translation2d mBackRightLocation;
 
-  private final SimpleMotorFeedforward mFeedForward = new SimpleMotorFeedforward(0.359, 1.2, 0.14);
+  private final SimpleMotorFeedforward mFeedForward;
 
-  private final MecanumDriveKinematics mKinematics =
-      new MecanumDriveKinematics(mFrontLeftLocation, mFrontRightLocation, mBackLeftLocation, mBackRightLocation);
-
-  private final MecanumDriveOdometry mOdometry =
-        new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());
+  private final MecanumDriveKinematics mKinematics;  
+  private final MecanumDriveOdometry mOdometry;
 
   public Drivetrain() {
+
+    mPigeon = new WPI_Pigeon2(5);
 
     mPigeon.reset();
 
@@ -50,12 +49,33 @@ public class Drivetrain extends SubsystemBase {
     mFrontRight = new WPI_TalonFX(Constants.CAN.kFrontRight, "rio");
     mBackRight = new WPI_TalonFX(Constants.CAN.kBackRight, "rio");
     mBackLeft = new WPI_TalonFX(Constants.CAN.kBackLeft, "rio");
-    
-    
+
     mFrontRight.setNeutralMode(NeutralMode.Brake);
     mFrontLeft.setNeutralMode(NeutralMode.Brake);
     mBackRight.setNeutralMode(NeutralMode.Brake);
     mBackLeft.setNeutralMode(NeutralMode.Brake);
+    
+    mFrontLeftPIDController = new PIDController(0.5, 0, 0);
+    mFrontRightPIDController = new PIDController(0.5, 0, 0);
+    mBackLeftPIDController = new PIDController(0.5, 0, 0);
+    mBackRightPIDController = new PIDController(0.5, 0, 0);
+
+    mFrontLeftLocation = new Translation2d(0.286, 0.28);
+    mFrontRightLocation = new Translation2d(0.286, -0.28);
+    mBackLeftLocation = new Translation2d(-0.286, 0.28);
+    mBackRightLocation = new Translation2d(-0.286, 0.28);
+
+
+    mKinematics = new MecanumDriveKinematics(
+      mFrontLeftLocation, 
+      mFrontRightLocation, 
+      mBackLeftLocation, 
+      mBackRightLocation);
+
+    mOdometry = new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());
+    mFeedForward = new SimpleMotorFeedforward(0.359, 1.2, 0.14);
+
+    
 
   }
 
@@ -124,7 +144,7 @@ public class Drivetrain extends SubsystemBase {
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, mPigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    mecanumDriveWheelSpeeds.desaturate(0.7);
+    mecanumDriveWheelSpeeds.desaturate(3);
     setSpeeds(mecanumDriveWheelSpeeds);
   }
 
