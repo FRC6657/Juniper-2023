@@ -1,11 +1,17 @@
 package frc.robot;
 
+import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
+
+import java.time.Instant;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -61,12 +67,18 @@ public class RobotContainer {
           brake
         )
       );
+
+      mOperator.x().toggleOnTrue(
+        new InstantCommand(
+          brake::retract,
+          brake
+        )
+      );
       
       mDriver.b().whileTrue(
-        new StartEndCommand(
-          () -> flipper.run(0.25),
-          flipper::stop,
-          flipper
+        new InstantCommand(
+          () -> drivetrain.resetPose(new Pose2d()),
+          drivetrain
         )
       );
 
@@ -84,12 +96,6 @@ public class RobotContainer {
           drivetrain)
       );
 
-      // mOperator.x().whileTrue(
-      //   new StartEndCommand(
-      //     claw::foward, 
-      //     claw::stop, 
-      //     claw)
-      // );
 
       mOperator.x().whileTrue(
         new RunCommand(
@@ -110,15 +116,10 @@ public class RobotContainer {
   
   public Command getAutonomousCommand(){
 
-    return new DriverControl(
-      drivetrain, 
-      () -> 0.0, 
-      () -> 1, 
-      () -> 0.0, 
-      false);
+    return new TestAuto(drivetrain);
 
-  }    
-
+  } 
+   
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

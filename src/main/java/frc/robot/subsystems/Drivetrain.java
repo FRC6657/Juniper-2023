@@ -4,17 +4,26 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPMecanumControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
@@ -26,6 +35,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final WPI_Pigeon2 mPigeon;
   
+  private final Field2d mField = new Field2d();
+
   private final PIDController mFrontLeftPIDController;
   private final PIDController mFrontRightPIDController;
   private final PIDController mBackLeftPIDController;
@@ -39,11 +50,12 @@ public class Drivetrain extends SubsystemBase {
   private final SimpleMotorFeedforward mFeedForward;
 
   private final MecanumDriveKinematics mKinematics;  
-  private final MecanumDriveOdometry mOdometry;
+  //private final MecanumDriveOdometry mOdometry;
+  private final MecanumDrivePoseEstimator mPoseEstimator;
 
   public Drivetrain() {
 
-    mPigeon = new WPI_Pigeon2(5);
+    mPigeon = new WPI_Pigeon2(Constants.CAN.kPigeon);
 
     mPigeon.reset();
 
@@ -82,9 +94,10 @@ public class Drivetrain extends SubsystemBase {
       mBackLeftLocation, 
       mBackRightLocation);
 
-    mOdometry = new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());
+    //mOdometry = new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());    
     mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
 
+    mPoseEstimator = new MecanumDrivePoseEstimator(mKinematics, mPigeon.getRotation2d(), getCurrentDistances(), new Pose2d());
     
 
   }
@@ -92,7 +105,8 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("gyro angle", mPigeon.getAngle());
+    mField.setRobotPose(getPose());
+    updateOdometry();
 
   }
 
@@ -104,18 +118,18 @@ public class Drivetrain extends SubsystemBase {
 
   public MecanumDriveWheelSpeeds getCurrentState() {
     return new MecanumDriveWheelSpeeds(
-      mFrontLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
-      mFrontRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
-      mBackLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
-      mBackRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters);
-  }
-
-  public MecanumDriveWheelPositions getCurrentDistances() {
-    return new MecanumDriveWheelPositions(
       mFrontLeft.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
       mFrontRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
       mBackLeft.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
       mBackRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10);
+  }
+
+  public MecanumDriveWheelPositions getCurrentDistances() {
+    return new MecanumDriveWheelPositions(
+      mFrontLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+      mFrontRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+      mBackLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+      mBackRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters);
   }
 
   public void setSpeeds(MecanumDriveWheelSpeeds speeds) {
@@ -150,12 +164,37 @@ public class Drivetrain extends SubsystemBase {
     mBackLeft.setVoltage(backLeftFeedForward + backLeftOutput);
     mBackRight.setVoltage(backRightFeedForward + backRightOutput);
 
-    SmartDashboard.putNumber("front left", mFrontLeft.get());
-    SmartDashboard.putNumber("front right", mFrontRight.get());
-    SmartDashboard.putNumber("back left", mBackLeft.get());
-    SmartDashboard.putNumber("back right", mBackRight.get());
     
     SmartDashboard.putNumber("back right speeds", speeds.rearRightMetersPerSecond);
+    SmartDashboard.putNumber("back left speeds", speeds.rearLeftMetersPerSecond);
+    SmartDashboard.putNumber("front right speeds", speeds.frontRightMetersPerSecond);
+    SmartDashboard.putNumber("front left speeds", speeds.frontLeftMetersPerSecond);
+
+    SmartDashboard.putNumber("fR set velocity", getCurrentState().frontRightMetersPerSecond);
+    SmartDashboard.putNumber("fL set velocity", getCurrentState().frontLeftMetersPerSecond);
+    SmartDashboard.putNumber("bR set velocity", getCurrentState().rearRightMetersPerSecond);
+    SmartDashboard.putNumber("bL set velocity", getCurrentState().rearLeftMetersPerSecond);
+
+    SmartDashboard.putNumber("robot x", mPoseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putData("field pose", mField);
+  }
+
+  public Pose2d getPose() {
+
+    return mPoseEstimator.getEstimatedPosition();
+
+  }
+
+  public void resetPose(Pose2d position) {
+
+    resetGyro();
+    
+    mFrontRight.setSelectedSensorPosition(0);
+    mFrontLeft.setSelectedSensorPosition(0);
+    mBackRight.setSelectedSensorPosition(0);
+    mBackLeft.setSelectedSensorPosition(0);
+
+    mPoseEstimator.resetPosition(position.getRotation(), getCurrentDistances(), position);
 
   }
 
@@ -189,7 +228,30 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void updateOdometry() {
-    mOdometry.update(mPigeon.getRotation2d(), getCurrentDistances());
+    mPoseEstimator.update(mPigeon.getRotation2d(), getCurrentDistances());
   }
+ 
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset pose estimation for the first path you run during auto
+          if(isFirstPath){
+              this.resetPose(traj.getInitialHolonomicPose());
+          }
+        }),
+        new PPMecanumControllerCommand(
+            traj, 
+            this::getPose, // Pose supplier
+            mKinematics,
+            new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+            new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            3, // Max wheel velocity meters per second
+            this::setSpeeds, // MecanumDriveWheelSpeeds consumer
+            this // Requires this drive subsystem
+        )
+    );
+}
+
 }
 

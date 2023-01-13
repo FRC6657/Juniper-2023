@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Claw extends SubsystemBase{
 
@@ -10,8 +11,8 @@ public class Claw extends SubsystemBase{
 
     public Claw() {
         
-        mLeftClaw = new Spark(10);
-        mRightClaw = new Spark(12);
+        mLeftClaw = new Spark(Constants.CAN.kLeftClaw);
+        mRightClaw = new Spark(Constants.CAN.kRightClaw);
 
         //Add pistons
 
