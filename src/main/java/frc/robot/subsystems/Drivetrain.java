@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPMecanumControllerCommand;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
@@ -48,7 +47,6 @@ public class Drivetrain extends SubsystemBase {
   private final SimpleMotorFeedforward mFeedForward;
 
   private final MecanumDriveKinematics mKinematics;  
-  //private final MecanumDriveOdometry mOdometry;
   private final MecanumDrivePoseEstimator mPoseEstimator;
 
   public Drivetrain() {
@@ -85,14 +83,13 @@ public class Drivetrain extends SubsystemBase {
     mBackLeftLocation = new Translation2d(-0.286, 0.28);
     mBackRightLocation = new Translation2d(-0.286, -0.28);
 
-
+    //TO DO fix locations
     mKinematics = new MecanumDriveKinematics(
       mFrontLeftLocation, 
       mFrontRightLocation, 
       mBackLeftLocation, 
       mBackRightLocation);
-
-    //mOdometry = new MecanumDriveOdometry(mKinematics, mPigeon.getRotation2d(), getCurrentDistances());    
+    
     mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
 
     mPoseEstimator = new MecanumDrivePoseEstimator(mKinematics, mPigeon.getRotation2d(), getCurrentDistances(), new Pose2d());
@@ -195,16 +192,6 @@ public class Drivetrain extends SubsystemBase {
     mPoseEstimator.resetPosition(position.getRotation(), getCurrentDistances(), position);
 
   }
-
-  public void easyDrive(double xPower, double yPower, double zPower) {
-
-    mFrontLeft.set(0.7 * (xPower + yPower + zPower));
-    mFrontRight.set(0.7 * (-xPower + yPower + zPower));
-    mBackLeft.set(0.7 * (xPower -yPower + zPower));
-    mBackRight.set(0.7 * (-xPower -yPower + zPower));
-
-  }
-
   
   public void stop() {
 
@@ -221,7 +208,14 @@ public class Drivetrain extends SubsystemBase {
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
     setSpeeds(mecanumDriveWheelSpeeds);
 
-    //5 - motor rpm / 10.71 * .4775 / 60
+  }
+
+  public void easyDrive(double xPower, double yPower, double zPower) {
+
+    mFrontLeft.set(0.7 * (xPower + yPower + zPower));
+    mFrontRight.set(0.7 * (-xPower + yPower + zPower));
+    mBackLeft.set(0.7 * (xPower -yPower + zPower));
+    mBackRight.set(0.7 * (-xPower -yPower + zPower));
 
   }
 
@@ -249,7 +243,6 @@ public class Drivetrain extends SubsystemBase {
             this // Requires this drive subsystem
         )
     );
-}
-
+  }
 }
 
