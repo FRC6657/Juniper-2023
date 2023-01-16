@@ -14,10 +14,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
-import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -141,22 +139,22 @@ public class Drivetrain extends SubsystemBase {
     
     final double frontLeftOutput =
         mFrontLeftPIDController.calculate(
-          mFrontLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+          mFrontLeft.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
           speeds.frontLeftMetersPerSecond);
     
     final double frontRightOutput =
           mFrontRightPIDController.calculate(
-            mFrontRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+            mFrontRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
             speeds.frontRightMetersPerSecond);
 
     final double backRightOutput =
             mBackRightPIDController.calculate(
-              mBackRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+              mBackRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
               speeds.rearRightMetersPerSecond);
     
     final double backLeftOutput =
               mBackLeftPIDController.calculate(
-                mBackLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
+                mBackLeft.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
                 speeds.rearLeftMetersPerSecond);
 
     mFrontLeft.setVoltage(frontLeftFeedForward + frontLeftOutput);

@@ -2,17 +2,11 @@ package frc.robot;
 
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
-
-import java.time.Instant;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,7 +21,6 @@ public class RobotContainer {
   private CommandXboxController mOperator = new CommandXboxController(1);
 
   private final Drivetrain drivetrain = new Drivetrain();
-  private final Arm arm = new Arm();
   private final Flipper flipper = new Flipper();
   private final Claw claw = new Claw();
   private final Brake brake = new Brake();
@@ -36,11 +29,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    LiveWindow.disableAllTelemetry();
-
     configureBindings();
   
-
   }
 
  
@@ -52,12 +42,6 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.05) * 3 , 
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05) * 3 , 
         true));
-
-      // CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
-      //   new DriverControl(drivetrain, 
-      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.05), 
-      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.05), 
-      //     ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05)));
        
     
 
@@ -90,6 +74,7 @@ public class RobotContainer {
         )
       );
 
+      // Resets the gyro, specifically for when field relative driving is on
       mDriver.x().whileTrue(
         new InstantCommand(
           drivetrain::resetGyro, 
