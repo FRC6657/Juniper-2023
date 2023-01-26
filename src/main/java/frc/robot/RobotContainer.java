@@ -2,15 +2,13 @@ package frc.robot;
 
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
-import frc.robot.subsystems.Brake;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
-import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.subsystems.claw.Pistons;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.custom.controls.deadbander;
@@ -22,9 +20,8 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Flipper flipper = new Flipper();
-  private final Claw claw = new Claw();
-  private final Brake brake = new Brake();
-
+  private final Arm arm = new Arm();
+  private final Pistons pistons = new Pistons();
 
 
   public RobotContainer() {
@@ -45,24 +42,23 @@ public class RobotContainer {
        
     
 
-      mOperator.y().toggleOnTrue(
+      mOperator.y().whileTrue(
         new InstantCommand(
-          brake::extend,
-          brake
+          pistons::extend,
+          pistons
         )
       );
 
-      mOperator.x().toggleOnTrue(
+      mOperator.x().whileTrue(
         new InstantCommand(
-          brake::retract,
-          brake
+          pistons::retract,
+          pistons
         )
       );
       
-      mDriver.b().whileTrue(
+      mOperator.b().whileTrue(
         new InstantCommand(
-          () -> drivetrain.resetPose(new Pose2d()),
-          drivetrain
+          () -> arm.run(-0.2)
         )
       );
 
@@ -79,21 +75,6 @@ public class RobotContainer {
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain)
-      );
-
-
-      mOperator.x().whileTrue(
-        new RunCommand(
-          claw::foward,
-          claw
-        )
-      );
-
-      mOperator.y().whileTrue(
-        new StartEndCommand(
-          claw::reverse, 
-          claw::stop, 
-          claw)
       );
 
     }
