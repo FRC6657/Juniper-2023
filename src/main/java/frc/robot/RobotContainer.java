@@ -2,14 +2,14 @@ package frc.robot;
 
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flipper;
 import frc.robot.subsystems.claw.Pistons;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.custom.controls.deadbander;
 
@@ -22,6 +22,7 @@ public class RobotContainer {
   private final Flipper flipper = new Flipper();
   private final Arm arm = new Arm();
   private final Pistons pistons = new Pistons();
+  private final Pivot pivot = new Pivot();
 
 
   public RobotContainer() {
@@ -40,33 +41,52 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.05) * 3 , 
         true));
        
-    
 
-      mOperator.y().whileTrue(
+      mOperator.a().whileTrue(
         new InstantCommand(
-          pistons::extend,
-          pistons
+          pivot::forward,
+          pivot
+        )
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+
+      mOperator.b().whileTrue(
+        new InstantCommand(
+          pivot::backward,
+          pivot
+        )
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
         )
       );
 
       mOperator.x().whileTrue(
         new InstantCommand(
-          pistons::retract,
-          pistons
+          arm::retract,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
         )
       );
       
-      mOperator.b().whileTrue(
+      mOperator.y().whileTrue(
         new InstantCommand(
-          () -> arm.run(-0.2)
+          arm::extend,
+          arm
         )
-      );
-
-      mDriver.a().whileTrue(
-        new StartEndCommand(
-          () -> flipper.run(-0.25),
-          flipper::stop,
-          flipper
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
         )
       );
 

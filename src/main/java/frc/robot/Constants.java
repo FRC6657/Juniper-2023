@@ -20,7 +20,7 @@ public final class Constants {
     public static final int kLeftClaw = 8;
     public static final int kRightClaw = 9;
     public static final int kFlipper = 10;
-    public static final int kArm = 11;
+    public static final int kPivot = 13;
 
   }
 

@@ -18,15 +18,11 @@ public class Brake extends SubsystemBase {
     }
 
     public void extend() {
-
         mSolenoid.set(Value.kReverse);
-
     }
 
     public void retract() {
-
         mSolenoid.set(Value.kForward);
-
     }
 
 }

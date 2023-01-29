@@ -78,12 +78,12 @@ public class Drivetrain extends SubsystemBase {
     mBackLeftPIDController = new PIDController(0, 0, 0);
     mBackRightPIDController = new PIDController(0, 0, 0);
 
-    mFrontLeftLocation = new Translation2d(0.286, 0.28);
-    mFrontRightLocation = new Translation2d(0.286, -0.28);
-    mBackLeftLocation = new Translation2d(-0.286, 0.28);
-    mBackRightLocation = new Translation2d(-0.286, -0.28);
+    mFrontLeftLocation = new Translation2d(-0.286, 0.28); // -+
+    mFrontRightLocation = new Translation2d(0.286, 0.28); // ++
+    mBackLeftLocation = new Translation2d(-0.286, -0.28); // --
+    mBackRightLocation = new Translation2d(0.286, -0.28); //+-
 
-    //TO DO fix locations
+    //TO DO adjust locations
     mKinematics = new MecanumDriveKinematics(
       mFrontLeftLocation, 
       mFrontRightLocation, 
