@@ -78,10 +78,10 @@ public class Drivetrain extends SubsystemBase {
     mBackLeftPIDController = new PIDController(0, 0, 0);
     mBackRightPIDController = new PIDController(0, 0, 0);
 
-    mFrontLeftLocation = new Translation2d(-0.286, 0.28); // -+
-    mFrontRightLocation = new Translation2d(0.286, 0.28); // ++
-    mBackLeftLocation = new Translation2d(-0.286, -0.28); // --
-    mBackRightLocation = new Translation2d(0.286, -0.28); //+-
+    mFrontLeftLocation = new Translation2d(-0.25, 0.25); // -+
+    mFrontRightLocation = new Translation2d(0.25, 0.25); // ++
+    mBackLeftLocation = new Translation2d(-0.25, -0.25); // --
+    mBackRightLocation = new Translation2d(0.25, -0.25); //+-
 
     //TO DO adjust locations
     mKinematics = new MecanumDriveKinematics(
@@ -91,7 +91,6 @@ public class Drivetrain extends SubsystemBase {
       mBackRightLocation);
     
     mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
-
     mPoseEstimator = new MecanumDrivePoseEstimator(mKinematics, mPigeon.getRotation2d(), getCurrentDistances(), new Pose2d());
     
 

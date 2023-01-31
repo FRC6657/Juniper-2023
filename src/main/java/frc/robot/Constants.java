@@ -16,7 +16,7 @@ public final class Constants {
     public static final int kBackRight = 4;
     public static final int kBackLeft = 5;
     public static final int kPigeon = 6;
-    public static final int kPCM = 7;
+    public static final int kPCM = 10;
     public static final int kLeftClaw = 8;
     public static final int kRightClaw = 9;
     public static final int kFlipper = 10;

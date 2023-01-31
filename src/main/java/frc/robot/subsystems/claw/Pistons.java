@@ -14,7 +14,7 @@ public class Pistons extends SubsystemBase {
     public Pistons() {
 
         mLSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 6, 7);
-        mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 1, 0);
+        mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 2, 3);
         
         retract();
     }
