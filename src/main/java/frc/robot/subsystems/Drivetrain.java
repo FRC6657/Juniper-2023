@@ -73,17 +73,16 @@ public class Drivetrain extends SubsystemBase {
     mFrontRight.setInverted(true);
     mBackRight.setInverted(true);
     
-    mFrontLeftPIDController = new PIDController(0, 0, 0);
-    mFrontRightPIDController = new PIDController(0, 0, 0);
-    mBackLeftPIDController = new PIDController(0, 0, 0);
-    mBackRightPIDController = new PIDController(0, 0, 0);
+    mFrontLeftPIDController = new PIDController(0.4, 0, 0);
+    mFrontRightPIDController = new PIDController(0.4, 0, 0);
+    mBackLeftPIDController = new PIDController(0.4, 0, 0);
+    mBackRightPIDController = new PIDController(0.4, 0, 0);
 
-    mFrontLeftLocation = new Translation2d(-0.25, 0.25); // -+
-    mFrontRightLocation = new Translation2d(0.25, 0.25); // ++
-    mBackLeftLocation = new Translation2d(-0.25, -0.25); // --
-    mBackRightLocation = new Translation2d(0.25, -0.25); //+-
+    mFrontLeftLocation = new Translation2d(0.291841, 0.258571);
+    mFrontRightLocation = new Translation2d(0.291841, -0.258571); 
+    mBackLeftLocation = new Translation2d(-0.291841, 0.258571); 
+    mBackRightLocation = new Translation2d(-0.291841, -0.258571);
 
-    //TO DO adjust locations
     mKinematics = new MecanumDriveKinematics(
       mFrontLeftLocation, 
       mFrontRightLocation, 
@@ -92,7 +91,6 @@ public class Drivetrain extends SubsystemBase {
     
     mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
     mPoseEstimator = new MecanumDrivePoseEstimator(mKinematics, mPigeon.getRotation2d(), getCurrentDistances(), new Pose2d());
-    
 
   }
 
@@ -110,6 +108,7 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
+  // current state of dt velocity
   public MecanumDriveWheelSpeeds getCurrentState() {
     return new MecanumDriveWheelSpeeds(
       mFrontLeft.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10, 
@@ -118,6 +117,7 @@ public class Drivetrain extends SubsystemBase {
       mBackRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10);
   }
 
+  //distances measured
   public MecanumDriveWheelPositions getCurrentDistances() {
     return new MecanumDriveWheelPositions(
       mFrontLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
@@ -126,6 +126,7 @@ public class Drivetrain extends SubsystemBase {
       mBackRight.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters);
   }
 
+  // what we want
   public void setSpeeds(MecanumDriveWheelSpeeds speeds) {
 
     final double frontLeftFeedForward = mFeedForward.calculate(speeds.frontLeftMetersPerSecond);
@@ -159,18 +160,20 @@ public class Drivetrain extends SubsystemBase {
     mBackRight.setVoltage(backRightFeedForward + backRightOutput);
 
     
+    //setpoints
     SmartDashboard.putNumber("back right speeds", speeds.rearRightMetersPerSecond);
     SmartDashboard.putNumber("back left speeds", speeds.rearLeftMetersPerSecond);
     SmartDashboard.putNumber("front right speeds", speeds.frontRightMetersPerSecond);
     SmartDashboard.putNumber("front left speeds", speeds.frontLeftMetersPerSecond);
 
+    //velocity
     SmartDashboard.putNumber("fR set velocity", getCurrentState().frontRightMetersPerSecond);
     SmartDashboard.putNumber("fL set velocity", getCurrentState().frontLeftMetersPerSecond);
     SmartDashboard.putNumber("bR set velocity", getCurrentState().rearRightMetersPerSecond);
     SmartDashboard.putNumber("bL set velocity", getCurrentState().rearLeftMetersPerSecond);
 
-    SmartDashboard.putNumber("robot x", mPoseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putData("field pose", mField);
+    SmartDashboard.putNumber("rotation", mPigeon.getRotation2d().getRotations());
   }
 
   public Pose2d getPose() {

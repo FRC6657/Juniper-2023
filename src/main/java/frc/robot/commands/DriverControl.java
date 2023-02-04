@@ -19,11 +19,11 @@ public class DriverControl extends CommandBase {
   private final Boolean pField;
 
 
-  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier zInput, Boolean fieldRelative) {
+  public DriverControl(Drivetrain drivetrain, DoubleSupplier xInput, DoubleSupplier yInput, DoubleSupplier rot, Boolean fieldRelative) {
     m_Drivetrain = drivetrain;
     pXInput = xInput;
     pYInput = yInput;
-    pZInput = zInput;
+    pZInput = rot;
     pField = fieldRelative;
 
 
