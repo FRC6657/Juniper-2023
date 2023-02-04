@@ -3,8 +3,8 @@ package frc.robot;
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,7 +22,7 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
   private final Pistons pistons = new Pistons();
-  private final Pivot pivot = new Pivot();
+  private final Claw claw = new Claw();
 
 
   public RobotContainer() {
@@ -41,20 +41,9 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.1) * 3, 
         false));
 
-        mTesting.a().toggleOnTrue(
-          new InstantCommand(
-            pivot::ratchetEnable,
-            pivot
-          )
-        );
-
-        mTesting.b().toggleOnTrue(
-          new InstantCommand(
-            pivot::ratchetDisable,
-            pivot
-          )
-        );
-
+        //Button to do: intake (open claw wheels inward, close claw wheel stop) 
+        //outtake (open claw wheels forward, close claw wheels stop)
+        
         mTesting.x().whileTrue(
           new InstantCommand(
             pistons::extend,
@@ -69,39 +58,39 @@ public class RobotContainer {
           )
         );
 
-      //Pivot upward
-      mOperator.a().whileTrue(
-        new SequentialCommandGroup(
+      mOperator.x().whileTrue(
+        new InstantCommand(
+          claw::intake,
+          claw
+        )).whileFalse(
           new InstantCommand(
-            pivot::ratchetEnable,
-            pivot),  
-          new InstantCommand(
-            pivot::forward,
-            pivot)
-        )
-      ).whileFalse(
-          new InstantCommand(
-            pivot::stop,
-            pivot)
-          );
+            claw::stop,
+            claw
+          )
+      );
 
+      mOperator.y().whileTrue(
+        new InstantCommand(
+          claw::outtake,
+          claw
+        )).whileFalse(
+          new InstantCommand(
+            claw::stop,
+            claw
+          )
+      );
+
+      //Cube - extend, wheels spin
       mOperator.b().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
-            pivot::ratchetDisable, 
-            pivot),
+            pistons::extend,
+            pistons
+          ),
           new InstantCommand(
-            pivot::backward,
-            pivot)
-        )
-      ).whileFalse(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pivot::stop, 
-            pivot),
-          new InstantCommand(
-            pivot::ratchetEnable,
-            pivot)
+            claw::intake,
+            claw
+          )
         )
       );
 
@@ -135,7 +124,6 @@ public class RobotContainer {
           drivetrain::resetGyro, 
           drivetrain)
       );
-
 
 
     }

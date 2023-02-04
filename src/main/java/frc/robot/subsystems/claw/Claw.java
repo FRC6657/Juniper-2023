@@ -1,35 +1,36 @@
 package frc.robot.subsystems.claw;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Claw extends SubsystemBase{
 
-    private final Spark mLeftClaw;
-    private final Spark mRightClaw;
+    private final TalonSRX mLeftClaw;
+    private final TalonSRX mRightClaw;
 
     public Claw() {
         
-        mLeftClaw = new Spark(Constants.CAN.kLeftClaw);
-        mRightClaw = new Spark(Constants.CAN.kRightClaw);
+        mLeftClaw = new TalonSRX(Constants.CAN.kLeftClaw);
+        mRightClaw = new TalonSRX(Constants.CAN.kRightClaw);
 
 
     }
 
-    public void foward() {
-        mLeftClaw.set(-0.7);
-        mRightClaw.set(0.7);
+    public void intake() {
+        mLeftClaw.set(ControlMode.PercentOutput, 0.5);
+        mRightClaw.set(ControlMode.PercentOutput,-0.5);
     }
 
-    public void reverse() {
-        mLeftClaw.set(0.7);
-        mRightClaw.set(-0.7);
+    public void outtake() {
+        mLeftClaw.set(ControlMode.PercentOutput,-0.5);
+        mRightClaw.set(ControlMode.PercentOutput,0.5);
     }
 
     public void stop() {
-        mLeftClaw.set(0);
-        mRightClaw.set(0);
+        mLeftClaw.set(ControlMode.PercentOutput,0);
+        mRightClaw.set(ControlMode.PercentOutput,0);
     }
     
 }

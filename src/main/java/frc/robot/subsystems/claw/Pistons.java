@@ -14,16 +14,20 @@ public class Pistons extends SubsystemBase {
     public Pistons() {
 
         mLSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 6, 7);
-        mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 2, 3);
+        mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 4, 5);
         
         retract();
     }
     
     public void extend() {
 
-        mRSolenoid.set(Value.kForward);
-        mLSolenoid.set(Value.kForward);
+        if(mRSolenoid.get() == Value.kReverse && mLSolenoid.get() == Value.kReverse) {
+            mLSolenoid.set(Value.kForward);
+            mRSolenoid.set(Value.kForward);
+        }
     }
+
+
 
     public void retract() {
 

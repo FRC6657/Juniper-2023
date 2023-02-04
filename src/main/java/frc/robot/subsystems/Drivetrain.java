@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -16,7 +18,6 @@ import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -90,8 +91,13 @@ public class Drivetrain extends SubsystemBase {
       mBackRightLocation);
     
     mFeedForward = new SimpleMotorFeedforward(0.13305, 2.2876, 0.31596);
-    mPoseEstimator = new MecanumDrivePoseEstimator(mKinematics, mPigeon.getRotation2d(), getCurrentDistances(), new Pose2d());
-
+    
+    mPoseEstimator = new MecanumDrivePoseEstimator(
+      mKinematics, 
+      mPigeon.getRotation2d(),
+      getCurrentDistances(), 
+      new Pose2d()
+  );
   }
 
   @Override
@@ -117,7 +123,7 @@ public class Drivetrain extends SubsystemBase {
       mBackRight.getSelectedSensorVelocity() * Constants.DriveConstants.kFalconToMeters * 10);
   }
 
-  //distances measured
+  //distances measured in meters
   public MecanumDriveWheelPositions getCurrentDistances() {
     return new MecanumDriveWheelPositions(
       mFrontLeft.getSelectedSensorPosition() * Constants.DriveConstants.kFalconToMeters, 
@@ -160,20 +166,18 @@ public class Drivetrain extends SubsystemBase {
     mBackRight.setVoltage(backRightFeedForward + backRightOutput);
 
     
-    //setpoints
-    SmartDashboard.putNumber("back right speeds", speeds.rearRightMetersPerSecond);
-    SmartDashboard.putNumber("back left speeds", speeds.rearLeftMetersPerSecond);
-    SmartDashboard.putNumber("front right speeds", speeds.frontRightMetersPerSecond);
-    SmartDashboard.putNumber("front left speeds", speeds.frontLeftMetersPerSecond);
-
     //velocity
-    SmartDashboard.putNumber("fR set velocity", getCurrentState().frontRightMetersPerSecond);
-    SmartDashboard.putNumber("fL set velocity", getCurrentState().frontLeftMetersPerSecond);
-    SmartDashboard.putNumber("bR set velocity", getCurrentState().rearRightMetersPerSecond);
-    SmartDashboard.putNumber("bL set velocity", getCurrentState().rearLeftMetersPerSecond);
+    Logger.getInstance().recordOutput("back right speeds", speeds.rearRightMetersPerSecond);
+    Logger.getInstance().recordOutput("back left speeds", speeds.rearLeftMetersPerSecond);
+    Logger.getInstance().recordOutput("front right speeds", speeds.frontRightMetersPerSecond);
+    Logger.getInstance().recordOutput("front left speeds", speeds.frontLeftMetersPerSecond);
 
-    SmartDashboard.putData("field pose", mField);
-    SmartDashboard.putNumber("rotation", mPigeon.getRotation2d().getRotations());
+    //setpoint
+    Logger.getInstance().recordOutput("fR set velocity", getCurrentState().frontRightMetersPerSecond);
+    Logger.getInstance().recordOutput("fL set velocity", getCurrentState().frontLeftMetersPerSecond);
+    Logger.getInstance().recordOutput("bR set velocity", getCurrentState().rearRightMetersPerSecond);
+    Logger.getInstance().recordOutput("bL set velocity", getCurrentState().rearLeftMetersPerSecond);
+
   }
 
   public Pose2d getPose() {
@@ -196,7 +200,9 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public void stop() {
-
+    
+    mFrontRight.set(0);
+    mFrontLeft.set(0);
     mBackRight.set(0);
     mBackLeft.set(0);
 
