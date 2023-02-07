@@ -1,12 +1,10 @@
 package frc.robot;
 
-import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.drive.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -41,9 +39,6 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.1) * 3, 
         false));
 
-        //Button to do: intake (open claw wheels inward, close claw wheel stop) 
-        //outtake (open claw wheels forward, close claw wheels stop)
-        
         mTesting.x().whileTrue(
           new InstantCommand(
             pistons::extend,
@@ -127,14 +122,6 @@ public class RobotContainer {
 
 
     }
-
-  
-  public Command getAutonomousCommand(){
-
-    return new TestAuto(drivetrain);
-
-  } 
-   
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -4,89 +4,156 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-import com.pathplanner.lib.server.PathPlannerServer;
-
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private PhotonCamera OV5647;
+  private AprilTagFieldLayout mTags = new AprilTagFieldLayout(FieldConstants.aprilTagList, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
+  private ArrayList<Pair<PhotonCamera, Transform3d>> mCamList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
+  private PhotonPoseEstimator mPoseEstimator;
 
+  private Pose3d mLastPose = new Pose3d();
 
   @Override
   public void robotInit() {
-   
-    m_robotContainer = new RobotContainer();
-    PathPlannerServer.startServer(5811);
+
+    Logger logger = Logger.getInstance();
+
+       // Record metadata
+       logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+       logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+       logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+       logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+       logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+       switch (BuildConstants.DIRTY) {
+         case 0:
+           logger.recordMetadata("GitDirty", "All changes committed");
+           break;
+         case 1:
+           logger.recordMetadata("GitDirty", "Uncomitted changes");
+           break;
+         default:
+           logger.recordMetadata("GitDirty", "Unknown");
+           break;
+       }
+
+       logger.addDataReceiver(new WPILOGWriter(""));
+       logger.addDataReceiver(new NT4Publisher());
+
+    logger.start();
+
+
+    var instance = NetworkTableInstance.getDefault();
+
+    if(RobotBase.isSimulation()){
+      instance.stopServer();
+      instance.setServer("10.0.0.5");
+      instance.startClient4("photonvision");
+    }
+
+    OV5647 = new PhotonCamera(instance, "OV5647");
+    mCamList.add(new Pair<PhotonCamera, Transform3d>(OV5647, new Transform3d()));
+
+    mPoseEstimator = new PhotonPoseEstimator(mTags, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, OV5647, new Transform3d());
+
+    Logger.getInstance().recordOutput("Apriltags",
+      FieldConstants.testTag.pose
+  );
 
   }
-
 
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  @Override
+  public void disabledExit() {}
+
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    // schedule the autonomous command (example)
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
 
-  /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {}
 
   @Override
+  public void autonomousExit() {}
+
+  @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
   }
 
-  /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    mPoseEstimator.setReferencePose(mLastPose);
+
+    double currentTime = Timer.getFPGATimestamp();
+
+    Optional<EstimatedRobotPose> result = mPoseEstimator.update();
+
+    Pair<Pose3d, Double> estimation;
+
+    if (result.isPresent()) {
+      estimation = new Pair<Pose3d, Double>(result.get().estimatedPose, currentTime - result.get().timestampSeconds);
+    } else {
+      estimation = new Pair<Pose3d, Double>(mLastPose, 0.0);
+    }
+
+    Logger.getInstance().recordOutput("Vision Estimate", estimation.getFirst());
+
+    mLastPose = estimation.getFirst();
+
+  }
+
+  @Override
+  public void teleopExit() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 
-  /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
+  public void testExit() {}
 }
+
