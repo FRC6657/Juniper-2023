@@ -1,13 +1,12 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPMecanumControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
@@ -17,11 +16,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
@@ -50,6 +49,9 @@ public class Drivetrain extends SubsystemBase {
   private final MecanumDriveKinematics mKinematics;  
   private final MecanumDrivePoseEstimator mPoseEstimator;
 
+  private final MecanumSimulation mSimulation;
+
+
   public Drivetrain() {
 
     mPigeon = new WPI_Pigeon2(Constants.CAN.kPigeon);
@@ -71,6 +73,11 @@ public class Drivetrain extends SubsystemBase {
     mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
     mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
 
+    if(RobotBase.isReal()){
+      mFrontRight.setInverted(true);
+      mBackRight.setInverted(true);
+    }
+    
     mFrontRight.setInverted(true);
     mBackRight.setInverted(true);
     
@@ -98,6 +105,23 @@ public class Drivetrain extends SubsystemBase {
       getCurrentDistances(), 
       new Pose2d()
   );
+
+  mSimulation = new MecanumSimulation(
+      new TalonFXSimCollection[]{
+        mFrontLeft.getSimCollection(),
+        mFrontRight.getSimCollection(),
+        mBackLeft.getSimCollection(),
+        mBackRight.getSimCollection()
+      },
+      mPigeon.getSimCollection(),
+      Constants.DriveConstants.kCharacterization,
+      mKinematics,
+      DCMotor.getFalcon500(1), 
+      KitbotGearing.k10p71.value, 
+      this::getCurrentState,
+      this::getMotorSets
+    );
+
   }
 
   @Override
@@ -108,11 +132,28 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
+  @Override
+  public void simulationPeriodic() {
+
+    mSimulation.update();
+
+  }
+
   public void resetGyro() {
 
     mPigeon.reset();
 
   }
+
+  //For Sim
+  public double[] getMotorSets() {
+    return new double[] {
+      mFrontLeft.get(),
+      mFrontRight.get(),
+      mBackLeft.get(),
+      mBackRight.get()
+    };
+  } 
 
   // current state of dt velocity
   public MecanumDriveWheelSpeeds getCurrentState() {
@@ -231,26 +272,5 @@ public class Drivetrain extends SubsystemBase {
     mPoseEstimator.update(mPigeon.getRotation2d(), getCurrentDistances());
   }
  
-  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-    return new SequentialCommandGroup(
-        new InstantCommand(() -> {
-          // Reset pose estimation for the first path you run during auto
-          if(isFirstPath){
-              this.resetPose(traj.getInitialHolonomicPose());
-          }
-        }),
-        new PPMecanumControllerCommand(
-            traj, 
-            this::getPose, // Pose supplier
-            mKinematics,
-            new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-            new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            3, // Max wheel velocity meters per second
-            this::setSpeeds, // MecanumDriveWheelSpeeds consumer
-            this // Requires this drive subsystem
-        )
-    );
-  }
 }
 
