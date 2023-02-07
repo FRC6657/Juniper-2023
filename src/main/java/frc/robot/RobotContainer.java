@@ -44,6 +44,8 @@ public class RobotContainer {
         //Button to do: intake (open claw wheels inward, close claw wheel stop) 
         //outtake (open claw wheels forward, close claw wheels stop)
         
+
+        //Testing
         mTesting.x().whileTrue(
           new InstantCommand(
             pistons::extend,
@@ -57,6 +59,8 @@ public class RobotContainer {
             pistons
           )
         );
+
+        //Operator
 
       mOperator.x().whileTrue(
         new InstantCommand(
@@ -117,6 +121,8 @@ public class RobotContainer {
           arm
         )
       );
+
+      //Driver
 
       // Resets the gyro, specifically for when field relative driving is on
       mDriver.x().whileTrue(
