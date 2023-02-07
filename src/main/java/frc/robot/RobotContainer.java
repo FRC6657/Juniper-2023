@@ -53,6 +53,8 @@ public class RobotContainer {
           )
         );
 
+        //Operator
+
       mOperator.x().whileTrue(
         new InstantCommand(
           claw::intake,
@@ -112,6 +114,8 @@ public class RobotContainer {
           arm
         )
       );
+
+      //Driver
 
       // Resets the gyro, specifically for when field relative driving is on
       mDriver.x().whileTrue(
