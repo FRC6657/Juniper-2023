@@ -114,7 +114,7 @@ public class Drivetrain extends SubsystemBase {
         mBackRight.getSimCollection()
       },
       mPigeon.getSimCollection(),
-      Constants.DriveConstants.kCharacterization,
+      Constants.DriveConstants.kDrivetrainCharacterization,
       mKinematics,
       DCMotor.getFalcon500(1), 
       KitbotGearing.k10p71.value, 

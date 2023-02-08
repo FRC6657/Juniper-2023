@@ -29,14 +29,12 @@ public final class Constants {
     //ENCODERS YAY FUN 
     public static final double kWheelDiameter = Units.inchesToMeters(6);
     public static final double kFalconToMeters = (1.0/2048) * (Units.inchesToMeters(6) * Math.PI) * (1/10.71) ; //10.71:1 gearbox
-
-    //Characterization Gains
+    
     public static final double kS = 0.13305;
     public static final double kV = 2.2876;
     public static final double kA = 0.31596;
 
-    public static final double[] kCharacterization = {kS, kV, kA};
-
+    public static double[] kDrivetrainCharacterization = {kS, kV, kA};
 
   }
 }

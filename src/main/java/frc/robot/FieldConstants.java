@@ -106,7 +106,4 @@ public class FieldConstants {
             add(tag8);
         }
     };
-
-
-
 }
