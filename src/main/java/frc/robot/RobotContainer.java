@@ -1,10 +1,13 @@
 package frc.robot;
 
 import frc.robot.commands.DriverControl;
+import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
 import frc.robot.subsystems.drive.Drivetrain;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,10 +20,14 @@ public class RobotContainer {
   private CommandXboxController mOperator = new CommandXboxController(1);
   private CommandXboxController mTesting = new CommandXboxController(2);
 
+  private static final Field2d mField = new Field2d();
+
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
   private final Pistons pistons = new Pistons();
   private final Claw claw = new Claw();
+  private final Brake brake = new Brake();
+  private final Pivot pivot = new Pivot();
 
 
   public RobotContainer() {
@@ -41,41 +48,17 @@ public class RobotContainer {
 
         mTesting.x().whileTrue(
           new InstantCommand(
-            pistons::extend,
-            pistons
+            brake::extend,
+            brake
           )
         );
 
         mTesting.y().whileTrue(
           new InstantCommand(
-            pistons::retract,
-            pistons
+            brake::retract,
+            brake
           )
         );
-
-        //Operator
-
-      mOperator.x().whileTrue(
-        new InstantCommand(
-          claw::intake,
-          claw
-        )).whileFalse(
-          new InstantCommand(
-            claw::stop,
-            claw
-          )
-      );
-
-      mOperator.y().whileTrue(
-        new InstantCommand(
-          claw::outtake,
-          claw
-        )).whileFalse(
-          new InstantCommand(
-            claw::stop,
-            claw
-          )
-      );
 
       //Cube - extend, wheels spin
       mOperator.b().whileTrue(
@@ -88,6 +71,26 @@ public class RobotContainer {
             claw::intake,
             claw
           )
+          )).whileFalse(
+            new SequentialCommandGroup(
+              new InstantCommand(
+                claw::stop,
+                claw),
+              new InstantCommand(
+                pistons::retract, 
+                pistons)
+            )
+        );
+
+      mOperator.a().whileTrue(
+        new InstantCommand(
+          pivot::forward, 
+          pivot
+          )
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
         )
       );
 
@@ -124,5 +127,9 @@ public class RobotContainer {
           drivetrain)
       );
 
+      }
+
+      public static Field2d getField() {
+        return mField;
       }
     }

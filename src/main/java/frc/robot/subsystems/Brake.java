@@ -8,21 +8,25 @@ import frc.robot.Constants;
 
 public class Brake extends SubsystemBase {
     
-    private final DoubleSolenoid mSolenoid;     
+    private final DoubleSolenoid mRight; 
+    private final DoubleSolenoid mLeft;    
     
     public Brake() {
 
-        mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 3, 4);
+        mRight = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 0, 1);
+        mLeft = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 2, 3);
         retract();
         
     }
 
-    public void extend() {
-        mSolenoid.set(Value.kReverse);
+    public void retract() {
+        mRight.set(Value.kReverse);
+        mLeft.set(Value.kReverse);
     }
 
-    public void retract() {
-        mSolenoid.set(Value.kForward);
+    public void extend() {
+        mRight.set(Value.kForward);
+        mLeft.set(Value.kForward);
     }
 
 }

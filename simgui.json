@@ -1,0 +1,24 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo"
+    }
+  },
+  "NetworkTables": {
+    "Transitory Values": {
+      "open": false
+    }
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 326
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    }
+  }
+}
