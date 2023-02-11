@@ -24,6 +24,8 @@ public class Pivot extends SubsystemBase {
         mEncoder.reset();
         ratchetEnable();
 
+        mEncoder.setDistancePerPulse(0);
+
     }
     public void ratchetEnable() {
         mSolenoid.set(Value.kForward);
@@ -33,9 +35,6 @@ public class Pivot extends SubsystemBase {
         mSolenoid.set(Value.kReverse);
     }
 
-    public void run(double speed) {
-        mPivot.set(speed);
-    }
 
     public void forward() {
         mPivot.set(0.1);

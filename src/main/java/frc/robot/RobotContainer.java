@@ -82,11 +82,34 @@ public class RobotContainer {
             )
         );
 
+      //Cone - extend
       mOperator.a().whileTrue(
         new InstantCommand(
-          pivot::forward, 
-          pivot
+          pistons::extend,
+          pistons
           )
+      ).whileFalse(
+        new InstantCommand(
+          pistons::retract,
+          pistons
+        )
+      );
+
+      mOperator.rightBumper().whileTrue(
+        new InstantCommand(
+          pistons::extend,
+          pistons
+        )
+      ).whileFalse(
+          new InstantCommand(
+            pistons::retract, 
+            pistons)
+      );
+
+      mOperator.povUp().whileTrue(
+        new InstantCommand(
+          pivot::forward,
+          pivot)
       ).whileFalse(
         new InstantCommand(
           pivot::stop,
@@ -94,7 +117,18 @@ public class RobotContainer {
         )
       );
 
-      mOperator.x().whileTrue(
+      mOperator.povDown().whileTrue(
+        new InstantCommand(
+          pivot::backward,
+          pivot)
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+
+      mOperator.leftTrigger().whileTrue(
         new InstantCommand(
           arm::retract,
           arm
@@ -106,7 +140,7 @@ public class RobotContainer {
         )
       );
       
-      mOperator.y().whileTrue(
+      mOperator.rightTrigger().whileTrue(
         new InstantCommand(
           arm::extend,
           arm
@@ -119,12 +153,18 @@ public class RobotContainer {
       );
 
       //Driver
-
       // Resets the gyro, specifically for when field relative driving is on
       mDriver.x().whileTrue(
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain)
+      );
+
+      mDriver.a().toggleOnTrue(
+        new InstantCommand(
+          brake::extend,
+          brake
+        )
       );
 
       }

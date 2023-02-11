@@ -24,6 +24,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -59,6 +60,8 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
 
+    SmartDashboard.putData("Field", mField);
+
     mPigeon = new WPI_Pigeon2(Constants.CAN.kPigeon);
 
     mPigeon.reset();
@@ -73,10 +76,10 @@ public class Drivetrain extends SubsystemBase {
     mBackRight.setNeutralMode(NeutralMode.Brake);
     mBackLeft.setNeutralMode(NeutralMode.Brake);
 
-    mFrontRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mFrontLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+    mFrontRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    mFrontLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, 0));
 
     if(RobotBase.isReal()){
       mFrontRight.setInverted(true);
@@ -224,6 +227,7 @@ public class Drivetrain extends SubsystemBase {
     Logger.getInstance().recordOutput("bR set velocity", getCurrentState().rearRightMetersPerSecond);
     Logger.getInstance().recordOutput("bL set velocity", getCurrentState().rearLeftMetersPerSecond);
 
+    
   }
 
   public Pose2d getPose() {

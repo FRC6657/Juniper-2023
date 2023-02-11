@@ -37,4 +37,9 @@ public final class Constants {
     public static double[] kDrivetrainCharacterization = {kS, kV, kA};
 
   }
+
+  //For encoder values on pivot and telescope
+  public static class ArmConstants {
+
+  }
 }
