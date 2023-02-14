@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
+  private RobotContainer mRobotContainer;
 
   private PhotonCamera OV5647;
   private AprilTagFieldLayout mTags = new AprilTagFieldLayout(FieldConstants.aprilTagList, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
@@ -40,6 +41,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
 
     Logger logger = Logger.getInstance();
+    mRobotContainer = new RobotContainer();
 
        // Record metadata
        logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
