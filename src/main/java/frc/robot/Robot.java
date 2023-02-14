@@ -1,12 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import java.util.ArrayList;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -15,7 +10,6 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -27,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends LoggedRobot {
+  
   private Command m_autonomousCommand;
   private RobotContainer mRobotContainer;
-
   private PhotonCamera OV5647;
   private AprilTagFieldLayout mTags = new AprilTagFieldLayout(FieldConstants.aprilTagList, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
   private ArrayList<Pair<PhotonCamera, Transform3d>> mCamList = new ArrayList<Pair<PhotonCamera, Transform3d>>();

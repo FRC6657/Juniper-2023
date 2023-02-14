@@ -37,11 +37,11 @@ public class Pivot extends SubsystemBase {
 
 
     public void forward() {
-        mPivot.set(0.1);
+        mPivot.set(0.5);
     }
 
     public void backward() {
-        mPivot.set(-0.1);
+        mPivot.set(-0.5);
     }
 
     public void stop() {

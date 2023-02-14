@@ -14,11 +14,11 @@ public class Arm extends SubsystemBase {
     }
 
     public void extend() {
-        mArm.set(0.25);
+        mArm.set(0.4);
     }
 
     public void retract() {
-        mArm.set(-0.25);
+        mArm.set(-0.4);
     }
 
     public void stop() {
