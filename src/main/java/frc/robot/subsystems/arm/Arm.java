@@ -1,15 +1,17 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
     
-    private final WPI_VictorSPX mArm;
+    private final WPI_TalonFX mArm;
 
     public Arm() {
 
-        mArm = new WPI_VictorSPX(8);
+        mArm = new WPI_TalonFX(Constants.CAN.kArm);
 
     }
 

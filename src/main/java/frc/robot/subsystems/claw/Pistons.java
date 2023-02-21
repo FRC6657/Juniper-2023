@@ -8,8 +8,8 @@ import frc.robot.Constants;
 
 public class Pistons extends SubsystemBase {
     
-    private final DoubleSolenoid mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 6, 7);
-    private final DoubleSolenoid mLSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.CTREPCM, 0, 1);
+    private final DoubleSolenoid mRSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 14, 15);
+    private final DoubleSolenoid mLSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 6, 7);
 
 
     public Pistons() {

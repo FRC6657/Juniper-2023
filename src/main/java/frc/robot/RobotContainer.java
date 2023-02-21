@@ -120,9 +120,13 @@ public class RobotContainer {
       );
 
       mOperator.povDown().whileTrue(
-        new InstantCommand(
-          pivot::backward,
-          pivot)
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pivot::ratchetDisable, 
+            pivot),
+          new InstantCommand(
+            pivot::backward,
+            pivot))
       ).whileFalse(
         new InstantCommand(
           pivot::stop,

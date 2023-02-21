@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPMecanumControllerCommand;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.math.controller.PIDController;
@@ -38,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
 
   private final WPI_Pigeon2 mPigeon;
   
-  private final Field2d mField = new Field2d();
+  private final Field2d mField;
 
   private final PIDController mFrontLeftPIDController;
   private final PIDController mFrontRightPIDController;
@@ -60,9 +59,10 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
 
-    SmartDashboard.putData("Field", mField);
-
     mPigeon = new WPI_Pigeon2(Constants.CAN.kPigeon);
+    mField = new Field2d();
+
+    SmartDashboard.putData("Field", mField);
 
     mPigeon.reset();
 
