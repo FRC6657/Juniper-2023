@@ -120,13 +120,9 @@ public class RobotContainer {
       );
 
       mOperator.povDown().whileTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pivot::ratchetDisable, 
-            pivot),
-          new InstantCommand(
-            pivot::backward,
-            pivot))
+        new InstantCommand(
+          pivot::backward,
+          pivot)
       ).whileFalse(
         new InstantCommand(
           pivot::stop,
@@ -166,10 +162,17 @@ public class RobotContainer {
           drivetrain)
       );
 
-      mDriver.a().toggleOnTrue(
+      mTesting.a().toggleOnTrue(
         new InstantCommand(
-          brake::extend,
-          brake
+          pivot::ratchetEnable,
+          pivot
+        )
+      );
+
+      mTesting.b().toggleOnTrue(
+        new InstantCommand(
+          pivot::ratchetDisable,
+          pivot
         )
       );
 
