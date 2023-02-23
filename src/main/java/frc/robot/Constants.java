@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -38,7 +39,9 @@ public final class Constants {
   }
 
   //For encoder values on pivot and telescope
-  public static class ArmConstants {
+  public static class VisionConstants {
+
+    public static final Transform3d kRobotToCam = new Transform3d();
 
   }
 }

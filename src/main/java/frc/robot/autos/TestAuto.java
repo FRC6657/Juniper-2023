@@ -8,7 +8,7 @@ import frc.robot.subsystems.drive.Drivetrain;
 
 public class TestAuto extends SequentialCommandGroup{
 
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("rot", new PathConstraints(3, 2));
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("left strafe", new PathConstraints(3, 2));
 
     public TestAuto(Drivetrain drivetrain) {
         addCommands(

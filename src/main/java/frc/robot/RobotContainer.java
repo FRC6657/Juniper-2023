@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.arm.Arm;
@@ -31,7 +32,6 @@ public class RobotContainer {
   private final Brake brake = new Brake();
   private final Pivot pivot = new Pivot();
 
-
   public RobotContainer() {
 
     configureBindings();
@@ -47,7 +47,7 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 3 , 
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.1) * 3, 
         false));
-
+    
         mTesting.x().whileTrue(
           new InstantCommand(
             brake::extend,
@@ -174,6 +174,12 @@ public class RobotContainer {
       );
 
       }
+
+      public Command getAutonomousCommand() {
+         return new TestAuto(drivetrain);
+      }
+
+        
 
       public static Field2d getField() {
         return mField;
