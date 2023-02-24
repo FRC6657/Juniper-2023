@@ -38,9 +38,9 @@ public final class Constants {
 
   }
 
-  //For encoder values on pivot and telescope
   public static class VisionConstants {
 
+    //Get Limelight distance to center of robot
     public static final Transform3d kRobotToCam = new Transform3d();
 
   }

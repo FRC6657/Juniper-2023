@@ -34,7 +34,6 @@ public class Pivot extends SubsystemBase {
         mPivot.setSelectedSensorPosition(degreeToFalcon(mEncoder.getAbsolutePosition()) - mEncoder.getPositionOffset());
         mPID.setTolerance(1, 5);
 
-        
         configureMotor();
     }
 
@@ -60,11 +59,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void forward() {
-        mPivot.set(0.5);
+        mPivot.set(-0.5);
     }
 
     public void backward() {
-        mPivot.set(-0.5);
+        mPivot.set(0.5);
     }
 
     public void stop() {

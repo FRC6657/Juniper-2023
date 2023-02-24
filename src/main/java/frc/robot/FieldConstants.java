@@ -5,7 +5,6 @@
 package frc.robot;
 
 import java.util.ArrayList;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -17,14 +16,14 @@ public class FieldConstants {
     public static final double kFieldWidth = Units.inchesToMeters(315.5);
 
     //Location in classroom
-    public final static AprilTag testTag = new AprilTag(2, 
-        new Pose3d(
-            (kFieldLength / 2),
-            (kFieldWidth / 2),
-            Units.inchesToMeters(45),
-            new Rotation3d(0,0, Math.PI/2)
-        )
-    );
+    // public final static AprilTag testTag = new AprilTag(2, 
+    //     new Pose3d(
+    //         (kFieldLength / 2),
+    //         (kFieldWidth / 2),
+    //         Units.inchesToMeters(45),
+    //         new Rotation3d(0,0, Math.PI/2)
+    //     )
+    // );
     
     public final static AprilTag tag1 = new AprilTag(1, 
         new Pose3d(
@@ -35,13 +34,13 @@ public class FieldConstants {
     );
 
     //Commented out for the sake of class testing, location on field correct
-    // public final static AprilTag tag2 = new AprilTag(2, 
-    //     new Pose3d(
-    //         Units.inchesToMeters(610.77),
-    //         Units.inchesToMeters(42.19),
-    //         Units.inchesToMeters(18.22),
-    //         new Rotation3d(0.0, 0.0, Math.PI))
-    // );
+    public final static AprilTag tag2 = new AprilTag(2, 
+        new Pose3d(
+            Units.inchesToMeters(610.77),
+            Units.inchesToMeters(42.19),
+            Units.inchesToMeters(18.22),
+            new Rotation3d(0.0, 0.0, Math.PI))
+    );
 
     public final static AprilTag tag3 = new AprilTag(3, 
         new Pose3d(
@@ -95,9 +94,9 @@ public class FieldConstants {
 
     public static ArrayList<AprilTag> aprilTagList = new ArrayList<AprilTag>(){
         {
-            add(testTag);
+            //add(testTag);
             add(tag1);
-            //add(tag2);
+            add(tag2);
             add(tag3);
             add(tag4);
             add(tag5);

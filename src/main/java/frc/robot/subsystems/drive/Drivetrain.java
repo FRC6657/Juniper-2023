@@ -149,13 +149,8 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     updateOdometry();
-
     mField.setRobotPose(getPose());
-    // Logger.getInstance().recordOutput("Robot Position", getPose());
-    // Logger.getInstance().recordOutput("Front Left M/s", getCurrentState().frontLeftMetersPerSecond);
-
   }
 
   public void resetGyro() {
