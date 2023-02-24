@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.autos.TaxiChargeBlue;
+import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.arm.Arm;
@@ -8,7 +9,11 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
 import frc.robot.subsystems.drive.Drivetrain;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,9 +26,8 @@ public class RobotContainer {
 
   private CommandXboxController mDriver = new CommandXboxController(0);
   private CommandXboxController mOperator = new CommandXboxController(1);
-  private CommandXboxController mTesting = new CommandXboxController(2);
-  private CommandXboxController mTieuTam = new CommandXboxController(3);
-  private CommandXboxController mLiam = new CommandXboxController(4);
+  private CommandXboxController mTieuTam = new CommandXboxController(2);
+  private CommandXboxController mLiam = new CommandXboxController(3);
 
   private static final Field2d mField = new Field2d();
 
@@ -33,6 +37,8 @@ public class RobotContainer {
   private final Claw claw = new Claw();
   private final Brake brake = new Brake();
   private final Pivot pivot = new Pivot();
+
+  private SendableChooser<SequentialCommandGroup[]> mAutoChooser = new SendableChooser<>();
 
   public RobotContainer() {
 
@@ -50,20 +56,6 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.1) * 3, 
         false));
     
-        mTesting.x().whileTrue(
-          new InstantCommand(
-            brake::extend,
-            brake
-          )
-        );
-
-        mTesting.y().whileTrue(
-          new InstantCommand(
-            brake::retract,
-            brake
-          )
-        );
-
       //Cube - extend, wheels spin
       mOperator.b().whileTrue(
         new SequentialCommandGroup(
@@ -162,20 +154,6 @@ public class RobotContainer {
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain)
-      );
-
-      mTesting.a().toggleOnTrue(
-        new InstantCommand(
-          pivot::ratchetEnable,
-          pivot
-        )
-      );
-
-      mTesting.b().toggleOnTrue(
-        new InstantCommand(
-          pivot::ratchetDisable,
-          pivot
-        )
       );
 
       //Tieu-Tam Controls
@@ -342,11 +320,35 @@ public class RobotContainer {
         )
       );
 
+      }
+
+      public void configureAutoChooser() {
+
+        mAutoChooser.setDefaultOption("Nothing", new SequentialCommandGroup[]{null, null});
+
+        mAutoChooser.addOption("TaxiChargeBlue", new SequentialCommandGroup[] {
+          new TaxiChargeBlue(drivetrain)
+        });
+
+        mAutoChooser.addOption("Test Auto", new SequentialCommandGroup[] {
+          new TestAuto(drivetrain)
+        });
+
+        SmartDashboard.putData("Auto Chooser", mAutoChooser);
 
       }
 
-      public Command getAutonomousCommand() {
-         return new TaxiChargeBlue(drivetrain);
+      public SequentialCommandGroup getAutonomousCommand() {
+        
+        int alliance = 0;
+        if(DriverStation.getAlliance() == Alliance.Red){
+          alliance = 0;
+        }else{
+          alliance = 1;
+        }
+
+         return mAutoChooser.getSelected()[alliance];
+
       }
 
       public static Field2d getField() {
