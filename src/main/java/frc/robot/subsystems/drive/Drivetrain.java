@@ -2,6 +2,10 @@ package frc.robot.subsystems.drive;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
@@ -32,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Vision;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -58,6 +63,7 @@ public class Drivetrain extends SubsystemBase {
   private final MecanumDrivePoseEstimator mPoseEstimator;
 
   private final MecanumSimulation mSimulation;
+  private final Vision mVision;
   
   private Field2d mField;
   private FieldObject2d mTraj;
@@ -129,6 +135,8 @@ public class Drivetrain extends SubsystemBase {
       this::getCurrentState,
       this::getMotorSets
     );
+
+    mVision = new Vision();
 
     mField = new Field2d();
     mTraj = mField.getObject("waypoints");
@@ -251,6 +259,14 @@ public class Drivetrain extends SubsystemBase {
 
   public void updateOdometry() {
     mPoseEstimator.update(mPigeon.getRotation2d(), getCurrentDistances());
+
+    Optional<EstimatedRobotPose> result = mVision.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
+
+    if (result.isPresent()) {
+      EstimatedRobotPose camPose = result.get();
+      mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+    }
+
   }
  
   @Override

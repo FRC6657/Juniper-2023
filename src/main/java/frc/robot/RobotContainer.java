@@ -1,6 +1,6 @@
 package frc.robot;
 
-import frc.robot.autos.TestAuto;
+import frc.robot.autos.TaxiChargeBlue;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.arm.Arm;
@@ -179,10 +179,8 @@ public class RobotContainer {
       }
 
       public Command getAutonomousCommand() {
-         return new TestAuto(drivetrain);
+         return new TaxiChargeBlue(drivetrain);
       }
-
-        
 
       public static Field2d getField() {
         return mField;

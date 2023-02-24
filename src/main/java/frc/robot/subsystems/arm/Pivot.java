@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -28,7 +26,7 @@ public class Pivot extends SubsystemBase {
         mPivot = new WPI_TalonFX(Constants.CAN.kPivot);
         mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 8, 9);
         mEncoder = new DutyCycleEncoder(9);
-        mPID = new PIDController(8/48.2, 0, 0);
+        mPID = new PIDController(8 / 48.2, 0, 0);
 
         Timer.delay(1);
         mEncoder.setPositionOffset(0/1024);
@@ -36,14 +34,12 @@ public class Pivot extends SubsystemBase {
         mPivot.setSelectedSensorPosition(degreeToFalcon(mEncoder.getAbsolutePosition()) - mEncoder.getPositionOffset());
         mPID.setTolerance(1, 5);
 
-        SmartDashboard.putNumber("TBE raw", mEncoder.getAbsolutePosition());
-
+        
         configureMotor();
-        ratchetDisable();
     }
 
+
     public void configureMotor() {
-        mPivot.setNeutralMode(NeutralMode.Brake);
 
     }
 
@@ -76,7 +72,6 @@ public class Pivot extends SubsystemBase {
     }
 
     public double getAngle() {
-        //To do make constants
         return mPivot.getSelectedSensorPosition() * 1/2048d * 1/100 * 24/60d * 360;
     }
 
@@ -95,5 +90,8 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Degrees", getAngle());
+        SmartDashboard.putNumber("TBE raw", mEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("TBE corrected", mEncoder.getAbsolutePosition() - mEncoder.getPositionOffset());
+
     }
 }
