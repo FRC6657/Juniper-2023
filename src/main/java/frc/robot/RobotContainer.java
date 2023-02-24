@@ -22,6 +22,8 @@ public class RobotContainer {
   private CommandXboxController mDriver = new CommandXboxController(0);
   private CommandXboxController mOperator = new CommandXboxController(1);
   private CommandXboxController mTesting = new CommandXboxController(2);
+  private CommandXboxController mTieuTam = new CommandXboxController(3);
+  private CommandXboxController mLiam = new CommandXboxController(4);
 
   private static final Field2d mField = new Field2d();
 
@@ -175,6 +177,171 @@ public class RobotContainer {
           pivot
         )
       );
+
+      //Tieu-Tam Controls
+      mTieuTam.y().onTrue(
+        new InstantCommand(
+          pistons::extend,
+          pistons
+        )
+      );
+
+      mTieuTam.y().onTrue(
+        new InstantCommand(
+          pistons::retract,
+          pistons
+        )
+      );
+
+      mTieuTam.rightBumper().whileTrue(
+        new InstantCommand(
+          arm::retract,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
+
+      mTieuTam.rightTrigger().whileTrue(
+        new InstantCommand(
+          arm::extend,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
+
+      mTieuTam.x().whileTrue(
+        new InstantCommand(
+          drivetrain::resetGyro, 
+          drivetrain
+        )
+      );
+
+      mTieuTam.povUp().onTrue(
+        new InstantCommand(
+          brake::retract,
+          brake
+        )
+      );
+
+      mTieuTam.povDown().onTrue(
+        new InstantCommand(
+          brake::extend,
+          brake
+        )
+      );
+
+      //Liam controls
+
+      mLiam.x().whileTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pistons::extend,
+            pistons
+          ),
+          new InstantCommand(
+            claw::intake,
+            claw
+          )
+        )
+      ).whileFalse(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pistons::retract,
+            pistons
+          ),
+          new InstantCommand(
+            claw::stop,
+            claw
+          )
+        )
+      );
+
+      mLiam.y().whileTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pistons::extend,
+            pistons
+          ),
+          new InstantCommand(
+            claw::outtake,
+            claw
+          )
+        )
+      ).whileFalse(
+        new InstantCommand(
+          claw::stop,
+          claw
+        )
+      );
+
+      mLiam.povUp().whileTrue(
+        new InstantCommand(
+          arm::extend,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
+
+      mLiam.povDown().whileTrue(
+        new InstantCommand(
+          arm::retract,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
+
+      mLiam.b().whileTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pivot::ratchetDisable,
+            pivot
+          ),
+          new InstantCommand(
+            pivot::forward,
+            pivot
+          )
+        )
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+
+      mLiam.a().whileTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            pivot::ratchetDisable,
+            pivot
+          ),
+          new InstantCommand(
+            pivot::backward,
+            pivot
+          )
+        )
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+
 
       }
 
