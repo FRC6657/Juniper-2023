@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -41,7 +43,10 @@ public final class Constants {
   public static class VisionConstants {
 
     //Get Limelight distance to center of robot
-    public static final Transform3d kRobotToCam = new Transform3d();
+    public static final Transform3d kRobotToCam = new Transform3d(
+      new Translation3d(-0.043, 0.203, 0.589065),
+      new Rotation3d()
+    );
 
   }
 }
