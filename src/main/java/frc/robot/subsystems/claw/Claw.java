@@ -15,12 +15,11 @@ public class Claw extends SubsystemBase{
         mLeftClaw = new TalonSRX(Constants.CAN.kLeftClaw);
         mRightClaw = new TalonSRX(Constants.CAN.kRightClaw);
 
-
     }
 
     public void intake() {
-        mLeftClaw.set(ControlMode.PercentOutput, 0.4);
-        mRightClaw.set(ControlMode.PercentOutput,-0.4);
+        mLeftClaw.set(ControlMode.PercentOutput, 0.6);
+        mRightClaw.set(ControlMode.PercentOutput,-0.6);
     }
 
     public void outtake() {

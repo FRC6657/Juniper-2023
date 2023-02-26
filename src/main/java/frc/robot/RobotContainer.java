@@ -3,7 +3,7 @@ package frc.robot;
 import frc.robot.autos.TaxiChargeBlue;
 import frc.robot.autos.TestAuto;
 import frc.robot.commands.DriverControl;
-import frc.robot.subsystems.Brake;
+
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
@@ -35,15 +35,12 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Pistons pistons = new Pistons();
   private final Claw claw = new Claw();
-  private final Brake brake = new Brake();
   private final Pivot pivot = new Pivot();
 
   private SendableChooser<SequentialCommandGroup[]> mAutoChooser = new SendableChooser<>();
 
   public RobotContainer() {
-
     configureBindings();
-  
   }
 
  
@@ -53,56 +50,73 @@ public class RobotContainer {
       new DriverControl(drivetrain, 
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.1) * 3, 
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 3 , 
-        ()-> deadbander.applyLinearScaledDeadband(mDriver.getRightX(), 0.1) * 3, 
-        false));
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.1) * 3, 
+        true));
     
-      //Cube - extend, wheels spin
+      mOperator.a().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(-10)
+        )
+      );
+
       mOperator.b().whileTrue(
-        new SequentialCommandGroup(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(40)
+        )
+      );
+
+      mOperator.y().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(30)
+        )
+      );
+
+      mOperator.x().whileTrue(
+        new ParallelCommandGroup(
           new InstantCommand(
             pistons::extend,
-            pistons
-          ),
+            pistons),
           new InstantCommand(
             claw::intake,
             claw
           )
-          )).whileFalse(
-            new SequentialCommandGroup(
-              new InstantCommand(
-                claw::stop,
-                claw),
-              new InstantCommand(
-                pistons::retract, 
-                pistons)
-            )
-        );
-
-      //Cone - extend
-      mOperator.a().whileTrue(
-        new InstantCommand(
-          pistons::extend,
-          pistons
-          )
-      ).whileFalse(
-        new InstantCommand(
-          pistons::retract,
-          pistons
         )
-      );
+      ).whileFalse(
+          new ParallelCommandGroup(
+            new InstantCommand(
+              pistons::retract, 
+              pistons),
+            new InstantCommand(
+              claw::stop,
+              claw
+            ))
+          );
 
       mOperator.rightBumper().whileTrue(
         new InstantCommand(
-          pistons::extend,
-          pistons
+          claw::outtake,
+          claw
         )
       ).whileFalse(
-          new InstantCommand(
-            pistons::retract, 
-            pistons)
+        new InstantCommand(
+          claw::stop,
+          claw
+        )
       );
 
-      mOperator.povUp().whileTrue(
+      mOperator.leftBumper().whileTrue(
+        new InstantCommand(
+          claw::intake,
+          claw
+        )
+      ).whileFalse(
+        new InstantCommand(
+          claw::stop,
+          claw
+        )
+      );
+
+      mOperator.povDown().whileTrue(
         new InstantCommand(
           pivot::forward,
           pivot)
@@ -113,7 +127,7 @@ public class RobotContainer {
         )
       );
 
-      mOperator.povDown().whileTrue(
+      mOperator.povUp().whileTrue(
         new InstantCommand(
           pivot::backward,
           pivot)
@@ -154,6 +168,10 @@ public class RobotContainer {
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain)
+      );
+
+      mDriver.a().whileTrue(
+        new InstantCommand()
       );
 
       //Tieu-Tam Controls
@@ -199,20 +217,6 @@ public class RobotContainer {
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain
-        )
-      );
-
-      mTieuTam.povUp().onTrue(
-        new InstantCommand(
-          brake::retract,
-          brake
-        )
-      );
-
-      mTieuTam.povDown().onTrue(
-        new InstantCommand(
-          brake::extend,
-          brake
         )
       );
 
@@ -348,14 +352,12 @@ public class RobotContainer {
         }
 
          return mAutoChooser.getSelected()[alliance];
-
       }
 
       public static Field2d getField() {
         return mField;
       }
 
-      //To run when disabled
       public Command stopAll() {
         return new ParallelCommandGroup(
           new InstantCommand(pivot::stop),

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -259,8 +260,11 @@ public class Drivetrain extends SubsystemBase {
 
     if (result.isPresent()) {
       EstimatedRobotPose camPose = result.get();
+      Logger.getInstance().recordOutput("Vision Pose", camPose.estimatedPose.toPose2d());
       mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     }
+
+    Logger.getInstance().recordOutput("Odo Pose", mPoseEstimator.getEstimatedPosition());
 
   }
  
@@ -285,8 +289,8 @@ public class Drivetrain extends SubsystemBase {
             traj, 
             this::getPose, // Pose supplier
             this.mKinematics, // MecanumDriveKinematics
-            new PIDController(1.5, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(1.5, 0, 0), // Y controller (usually the same values as X controller)
+            new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
             new PIDController(1, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             3.0, // Max wheel velocity meters per second
             this::setSpeeds, // MecanumDriveWheelSpeeds consumer
