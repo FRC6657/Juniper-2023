@@ -1,9 +1,8 @@
 package frc.robot;
 
-import frc.robot.autos.TaxiChargeBlue;
-import frc.robot.autos.TestAuto;
+import frc.robot.autos.BlueAlliance.TaxiBlue;
+import frc.robot.autos.RedAlliance.TaxiRed;
 import frc.robot.commands.DriverControl;
-
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
@@ -330,12 +329,9 @@ public class RobotContainer {
 
         mAutoChooser.setDefaultOption("Nothing", new SequentialCommandGroup[]{null, null});
 
-        mAutoChooser.addOption("TaxiChargeBlue", new SequentialCommandGroup[] {
-          new TaxiChargeBlue(drivetrain)
-        });
-
-        mAutoChooser.addOption("Test Auto", new SequentialCommandGroup[] {
-          new TestAuto(drivetrain)
+        mAutoChooser.addOption("TaxiCharge", new SequentialCommandGroup[] {
+          new TaxiBlue(drivetrain),
+          new TaxiRed(drivetrain)
         });
 
         SmartDashboard.putData("Auto Chooser", mAutoChooser);

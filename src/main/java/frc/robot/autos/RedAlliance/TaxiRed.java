@@ -1,16 +1,18 @@
-package frc.robot.autos;
+package frc.robot.autos.RedAlliance;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class TestAuto extends SequentialCommandGroup{
+public class TaxiRed extends SequentialCommandGroup{
 
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("left strafe", new PathConstraints(3, 2));
+    //Actually make this 
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("red taxi", new PathConstraints(3, 3));
 
-    public TestAuto(Drivetrain drivetrain) {
+    public TaxiRed(Drivetrain drivetrain) {
         addCommands(
             drivetrain.followTrajectoryCommand(trajectory, true)
         );
