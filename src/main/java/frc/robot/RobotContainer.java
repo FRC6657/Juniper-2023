@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.custom.controls.deadbander;
@@ -221,7 +222,8 @@ public class RobotContainer {
 
       //Liam controls
 
-      mLiam.x().whileTrue(
+
+      mLiam.leftBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
             pistons::extend,
@@ -245,7 +247,7 @@ public class RobotContainer {
         )
       );
 
-      mLiam.y().whileTrue(
+      mLiam.rightBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
             pistons::extend,
@@ -260,6 +262,20 @@ public class RobotContainer {
         new InstantCommand(
           claw::stop,
           claw
+        )
+      );
+
+      mLiam.leftTrigger().whileTrue(
+        new InstantCommand(
+          pistons::retract,
+          pistons
+        )
+      );
+
+      mLiam.rightTrigger().whileTrue(
+        new InstantCommand(
+          pistons::extend,
+          pistons
         )
       );
 
@@ -287,41 +303,38 @@ public class RobotContainer {
         )
       );
 
-      mLiam.b().whileTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pivot::ratchetDisable,
-            pivot
-          ),
-          new InstantCommand(
-            pivot::forward,
-            pivot
-          )
-        )
-      ).whileFalse(
-        new InstantCommand(
-          pivot::stop,
-          pivot
+      CommandScheduler.getInstance().setDefaultCommand(
+        pivot,
+        new RunCommand(
+          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mLiam.getLeftX(), 0.1) * 0.1),
+           pivot
         )
       );
 
       mLiam.a().whileTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pivot::ratchetDisable,
-            pivot
-          ),
-          new InstantCommand(
-            pivot::backward,
-            pivot
-          )
-        )
-      ).whileFalse(
         new InstantCommand(
-          pivot::stop,
-          pivot
+          () -> pivot.changeSetpoint(-10)
         )
       );
+
+      mLiam.b().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(40)
+        )
+      );
+
+      mLiam.y().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(30)
+        )
+      );
+      
+      
+
+
+      
+
+
 
       }
 
