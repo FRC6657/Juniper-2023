@@ -66,6 +66,10 @@ public class Pivot extends SubsystemBase {
         mTargetAngle = setpoint;
     }
 
+    public void addToTargetAngle(double value){
+        mTargetAngle += value;
+    }
+
     public void ratchetEnable() {
         mSolenoid.set(Value.kForward);
     }
