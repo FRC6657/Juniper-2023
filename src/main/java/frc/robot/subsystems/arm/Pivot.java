@@ -27,7 +27,7 @@ public class Pivot extends SubsystemBase {
     public Pivot() {
 
         mPivot = new WPI_TalonFX(Constants.CAN.kPivot);
-        mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 8, 9);
+        mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 6, 7);
         mEncoder = new DutyCycleEncoder(9);
         mPID = new PIDController(32 / 48.2, 0, 0);
         Timer.delay(2);
@@ -40,8 +40,8 @@ public class Pivot extends SubsystemBase {
         //Starting target angle, will move when enabled
         mTargetAngle = 45;
 
-        configureMotor();
         ratchetDisable();
+        configureMotor();
 
     }
 
@@ -71,11 +71,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void ratchetEnable() {
-        mSolenoid.set(Value.kForward);
+        mSolenoid.set(Value.kReverse);
     }
 
     public void ratchetDisable() {
-        mSolenoid.set(Value.kReverse);
+        mSolenoid.set(Value.kForward);
     }
 
     public void forward() {

@@ -28,6 +28,8 @@ public class RobotContainer {
   private CommandXboxController mOperator = new CommandXboxController(1);
   private CommandXboxController mTieuTam = new CommandXboxController(2);
   private CommandXboxController mLiam = new CommandXboxController(3);
+  private CommandXboxController mTest = new CommandXboxController(4);
+
 
   private static final Field2d mField = new Field2d();
 
@@ -52,6 +54,101 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 3 , 
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.1) * 3, 
         true));
+
+      
+      mTest.a().whileTrue(
+        new InstantCommand(
+          pistons::extend,
+          pistons
+        )
+      ).whileFalse(
+        new InstantCommand(
+          pistons::retract,
+          pistons
+        )
+      );
+
+      mTest.b().whileTrue(
+        new InstantCommand(
+          claw::intake,
+          claw
+        )).whileFalse(
+            new InstantCommand(
+              claw::stop, 
+              claw)
+      );
+
+      mTest.x().whileTrue(
+          new InstantCommand(
+            claw::outtake,
+            claw
+          )).whileFalse(
+              new InstantCommand(
+                claw::stop, 
+                claw)
+        );
+
+        mTest.back().whileTrue(
+          new InstantCommand(
+            pivot::ratchetDisable,
+            pivot
+          )
+        );
+
+        mTest.start().whileTrue(
+          new InstantCommand(
+            pivot::ratchetEnable,
+            pivot
+          )
+        );
+
+        
+      
+      mTest.povDown().whileTrue(
+        new InstantCommand(
+          pivot::forward,
+          pivot)
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+
+      mTest.povUp().whileTrue(
+        new InstantCommand(
+          pivot::backward,
+          pivot)
+      ).whileFalse(
+        new InstantCommand(
+          pivot::stop,
+          pivot
+        )
+      );
+      
+      mTest.leftTrigger().whileTrue(
+        new InstantCommand(
+          arm::retract,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
+      
+      mTest.rightTrigger().whileTrue(
+        new InstantCommand(
+          arm::extend,
+          arm
+        )
+      ).whileFalse(
+        new InstantCommand(
+          arm::stop,
+          arm
+        )
+      );
     
       mOperator.a().whileTrue(
         new InstantCommand(
@@ -335,6 +432,20 @@ public class RobotContainer {
       
 
 
+
+      mTest.y().whileTrue(
+        new InstantCommand(
+          pivot::ratchetDisable,
+          pivot
+        )
+      );
+
+      mTest.x().whileTrue(
+        new InstantCommand(
+          pivot::ratchetEnable,
+          pivot
+        )
+      );
 
       }
 
