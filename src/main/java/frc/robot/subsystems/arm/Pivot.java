@@ -38,8 +38,7 @@ public class Pivot extends SubsystemBase {
         mPID.setTolerance(1, 5);
 
         //Starting target angle, will move when enabled
-        mTargetAngle = 45;
-
+       
         ratchetDisable();
         configureMotor();
 
