@@ -37,8 +37,6 @@ public class Pivot extends SubsystemBase {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
         mPID.setTolerance(1, 5);
 
-        //Starting target angle, will move when enabled
-       
         ratchetDisable();
         configureMotor();
 
@@ -50,7 +48,9 @@ public class Pivot extends SubsystemBase {
         mPivot.configFactoryDefault();
         mPivot.setNeutralMode(NeutralMode.Brake);
 
-        mPivot.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,30,30,0));
+        mPivot.configVoltageCompSaturation(10);
+        mPivot.enableVoltageCompensation(true);
+        mPivot.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
 
     }
 
@@ -62,7 +62,13 @@ public class Pivot extends SubsystemBase {
     }
 
     public void changeSetpoint(double setpoint) {
+
+        if (setpoint < getAngle()) {
+            ratchetDisable();
+        }
+
         mTargetAngle = setpoint;
+
     }
 
     public void addToTargetAngle(double value){

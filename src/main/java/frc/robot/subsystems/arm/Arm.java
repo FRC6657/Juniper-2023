@@ -12,7 +12,7 @@ public class Arm extends SubsystemBase {
     public Arm() {
 
         mArm = new WPI_TalonFX(Constants.CAN.kArm);
-        mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0));
+        mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0));
 
     }
 

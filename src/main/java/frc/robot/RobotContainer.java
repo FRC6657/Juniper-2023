@@ -54,6 +54,13 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.1) * 3, 
         true));
     
+      // Resets the gyro, specifically for when field relative driving is on
+      mDriver.x().whileTrue(
+        new InstantCommand(
+          drivetrain::resetGyro, 
+          drivetrain)
+      );
+
       mOperator.a().whileTrue(
         new InstantCommand(
           () -> pivot.changeSetpoint(-10)
@@ -62,7 +69,7 @@ public class RobotContainer {
 
       mOperator.b().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(40)
+          () -> pivot.changeSetpoint(0)
         )
       );
 
@@ -163,18 +170,6 @@ public class RobotContainer {
         )
       );
 
-      //Driver
-      // Resets the gyro, specifically for when field relative driving is on
-      mDriver.x().whileTrue(
-        new InstantCommand(
-          drivetrain::resetGyro, 
-          drivetrain)
-      );
-
-      mDriver.a().whileTrue(
-        new InstantCommand()
-      );
-
       //Tieu-Tam Controls
       mTieuTam.y().onTrue(
         new InstantCommand(
@@ -222,8 +217,6 @@ public class RobotContainer {
       );
 
       //Liam controls
-
-
       mLiam.leftBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
@@ -332,13 +325,13 @@ public class RobotContainer {
 
       mLiam.b().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(40)
+          () -> pivot.changeSetpoint(30)
         )
       );
 
       mLiam.y().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(30)
+          () -> pivot.changeSetpoint(40)
         )
       );
 
