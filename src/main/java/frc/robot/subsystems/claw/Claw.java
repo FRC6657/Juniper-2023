@@ -18,8 +18,8 @@ public class Claw extends SubsystemBase{
     }
 
     public void intake() {
-        mLeftClaw.set(ControlMode.PercentOutput, 0.6);
-        mRightClaw.set(ControlMode.PercentOutput,-0.6);
+        mLeftClaw.set(ControlMode.PercentOutput, 0.4);
+        mRightClaw.set(ControlMode.PercentOutput,-0.4);
     }
 
     public void outtake() {

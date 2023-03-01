@@ -13,7 +13,8 @@ public class Arm extends SubsystemBase {
 
         mArm = new WPI_TalonFX(Constants.CAN.kArm);
         mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0));
-
+        mArm.setInverted(true);
+        
     }
 
     public void extend() {

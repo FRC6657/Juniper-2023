@@ -185,7 +185,7 @@ public class RobotContainer {
         )
       );
 
-      mTieuTam.rightBumper().whileTrue(
+      mTieuTam.leftTrigger().whileTrue(
         new InstantCommand(
           arm::retract,
           arm
