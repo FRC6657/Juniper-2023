@@ -49,9 +49,9 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftY(), 0.1) * 3, 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 3 , 
-        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.1) * 3, 
+        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getRightY(), 0.1) *1.7, 
+        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getRightX(), 0.1) * 1.7, 
+        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getLeftX(), 0.1) * 3, 
         true));
     
       // Resets the gyro, specifically for when field relative driving is on
@@ -178,7 +178,7 @@ public class RobotContainer {
         )
       );
 
-      mTieuTam.y().onTrue(
+      mTieuTam.x().onTrue(
         new InstantCommand(
           pistons::retract,
           pistons
@@ -209,7 +209,7 @@ public class RobotContainer {
         )
       );
 
-      mTieuTam.x().whileTrue(
+      mTieuTam.b().whileTrue(
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain
@@ -312,12 +312,12 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(
         pivot,
         new RunCommand(
-          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mLiam.getLeftY(), 0.1) * 0.1),
+          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mLiam.getLeftY(), 0.1) * 0.2),
            pivot
         )
       );
 
-      mLiam.a().whileTrue(
+      mLiam.x().whileTrue(
         new InstantCommand(
           () -> pivot.changeSetpoint(-10)
         )
@@ -329,9 +329,14 @@ public class RobotContainer {
         )
       );
 
+      mLiam.a().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(50)
+        )
+      );
       mLiam.y().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(40)
+          () -> pivot.changeSetpoint(15)
         )
       );
 

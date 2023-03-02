@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -37,9 +38,10 @@ public class Pivot extends SubsystemBase {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
         mPID.setTolerance(1, 5);
 
+        
+
         ratchetDisable();
         configureMotor();
-
     }
 
 
@@ -57,7 +59,7 @@ public class Pivot extends SubsystemBase {
     public void runPivot() {
 
        double mPIDEffort = mPID.calculate(getAngle(), mTargetAngle);
-       mPivot.setVoltage(mPIDEffort);
+       mPivot.set(mPIDEffort/12);
 
     }
 
@@ -120,6 +122,7 @@ public class Pivot extends SubsystemBase {
 
         runPivot();
 
+        SmartDashboard.putNumber("setpoint", mTargetAngle);
         Logger.getInstance().recordOutput("TBE raw", mEncoder.getAbsolutePosition());
         Logger.getInstance().recordOutput("TBE corrected", mEncoder.getAbsolutePosition() - mEncoder.getPositionOffset());
         Logger.getInstance().recordOutput("target angle", mTargetAngle);
