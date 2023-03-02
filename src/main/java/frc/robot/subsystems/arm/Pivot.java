@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -38,12 +39,11 @@ public class Pivot extends SubsystemBase {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
         mPID.setTolerance(1, 5);
 
-        
-
         ratchetDisable();
         configureMotor();
-    }
+        startConfig();
 
+    }
 
     public void configureMotor() {
 
@@ -53,13 +53,12 @@ public class Pivot extends SubsystemBase {
         mPivot.configVoltageCompSaturation(10);
         mPivot.enableVoltageCompensation(true);
         mPivot.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
-
     }
 
     public void runPivot() {
 
        double mPIDEffort = mPID.calculate(getAngle(), mTargetAngle);
-       mPivot.set(mPIDEffort/12);
+       mPivot.setVoltage(MathUtil.clamp(mPIDEffort, 60, -20));
 
     }
 
@@ -84,15 +83,7 @@ public class Pivot extends SubsystemBase {
     public void ratchetDisable() {
         mSolenoid.set(Value.kForward);
     }
-
-    public void forward() {
-        mPivot.set(-0.5);
-    }
-
-    public void backward() {
-        mPivot.set(0.5);
-    }
-
+  
     public void stop() {
         mPivot.set(0);
     }
@@ -115,6 +106,10 @@ public class Pivot extends SubsystemBase {
 
     public double degreeToFalcon(double deg) {
         return deg * (1d/360d) * (60d/16d) * 100 * 2048;
+    }
+
+    public void startConfig() {
+        mTargetAngle = getAngle();
     }
 
     @Override

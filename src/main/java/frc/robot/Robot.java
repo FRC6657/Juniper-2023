@@ -17,7 +17,6 @@ public class Robot extends LoggedRobot {
 
     Logger logger = Logger.getInstance();
     mRobotContainer = new RobotContainer();
-
        // Record metadata
        logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
        logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -78,9 +77,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
   }
 
   @Override

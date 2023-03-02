@@ -124,28 +124,6 @@ public class RobotContainer {
         )
       );
 
-      mOperator.povDown().whileTrue(
-        new InstantCommand(
-          pivot::forward,
-          pivot)
-      ).whileFalse(
-        new InstantCommand(
-          pivot::stop,
-          pivot
-        )
-      );
-
-      mOperator.povUp().whileTrue(
-        new InstantCommand(
-          pivot::backward,
-          pivot)
-      ).whileFalse(
-        new InstantCommand(
-          pivot::stop,
-          pivot
-        )
-      );
-
       mOperator.leftTrigger().whileTrue(
         new InstantCommand(
           arm::retract,
