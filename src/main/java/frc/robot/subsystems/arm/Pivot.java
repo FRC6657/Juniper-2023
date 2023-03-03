@@ -57,8 +57,8 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-       double mPIDEffort = mPID.calculate(getAngle(), mTargetAngle);
-       mPivot.setVoltage(MathUtil.clamp(mPIDEffort, 60, -20));
+       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle, 60, -20));
+       mPivot.set(mPIDEffort / 12);
 
     }
 
