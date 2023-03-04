@@ -13,13 +13,10 @@ public class HybridCube extends SequentialCommandGroup {
     public HybridCube(Claw claw, Pivot pivot, Arm arm, Pistons pistons) {
         addCommands(
             new SequentialCommandGroup(
-                new InstantCommand(
-                    (() -> pivot.changeSetpoint(-10)),
-                    pivot)),
                 new InstantCommand(pistons::extend),
                 new InstantCommand(claw::outtake),
-                new WaitCommand(1),
+                new WaitCommand(0.5),
                 new InstantCommand(claw::stop)
-        );
+        ));
     }
 }

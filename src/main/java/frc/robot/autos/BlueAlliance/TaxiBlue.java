@@ -10,7 +10,7 @@ import frc.robot.subsystems.drive.Drivetrain;
 //To taxi and then balance on station as blue alliance
 public class TaxiBlue extends SequentialCommandGroup {
     
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("blue taxi", new PathConstraints(3, 3));
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Blue Taxi", new PathConstraints(3, 3));
 
     public TaxiBlue(Drivetrain drivetrain) {
         addCommands(

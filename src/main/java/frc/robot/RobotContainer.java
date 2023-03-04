@@ -1,6 +1,8 @@
 package frc.robot;
 
+import frc.robot.autos.BlueAlliance.CubeTaxiBlue;
 import frc.robot.autos.BlueAlliance.TaxiBlue;
+import frc.robot.autos.RedAlliance.CubeTaxiRed;
 import frc.robot.autos.RedAlliance.TaxiRed;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.arm.Arm;
@@ -8,6 +10,7 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
 import frc.robot.subsystems.drive.Drivetrain;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -251,29 +254,40 @@ public class RobotContainer {
         )
       );
 
+      // mLiam.povUp().whileTrue(
+      //   new InstantCommand(
+      //     arm::extend,
+      //     arm
+      //   )
+      // ).whileFalse(
+      //   new InstantCommand(
+      //     arm::stop,
+      //     arm
+      //   )
+      // );
+
+      // mLiam.povDown().whileTrue(
+      //   new InstantCommand(
+      //     arm::retract,
+      //     arm
+      //   )
+      // ).whileFalse(
+      //   new InstantCommand(
+      //     arm::stop,
+      //     arm
+      //   )
+      // );
+
       mLiam.povUp().whileTrue(
         new InstantCommand(
-          arm::extend,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
+          () -> arm.changeSetpoint(1.5)
         )
       );
 
       mLiam.povDown().whileTrue(
         new InstantCommand(
-          arm::retract,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
-        )
-      );
+            () -> arm.changeSetpoint(0)
+          ));
 
       mLiam.start().whileTrue(
         new InstantCommand(
@@ -294,6 +308,12 @@ public class RobotContainer {
            pivot
         )
       );
+
+      CommandScheduler.getInstance().setDefaultCommand(
+        arm, 
+        new RunCommand(
+          () -> arm.addToSetpoint(deadbander.applyLinearScaledDeadband(-mLiam.getRightY(), 0.1) * Units.inchesToMeters(3)), 
+          arm));
 
       mLiam.x().whileTrue(
         new InstantCommand(
@@ -318,15 +338,23 @@ public class RobotContainer {
         )
       );
 
+      configureAutoChooser();
+
       }
 
+      
       public void configureAutoChooser() {
 
         mAutoChooser.setDefaultOption("Nothing", new SequentialCommandGroup[]{null, null});
 
-        mAutoChooser.addOption("TaxiCharge", new SequentialCommandGroup[] {
+        mAutoChooser.addOption("Taxi", new SequentialCommandGroup[] {
           new TaxiBlue(drivetrain),
           new TaxiRed(drivetrain)
+        });
+
+        mAutoChooser.addOption("CubeScoreTaxi", new SequentialCommandGroup[] {
+          new CubeTaxiBlue(drivetrain, pivot, arm, pistons, claw),
+          new CubeTaxiRed(drivetrain, pivot, arm, pistons, claw)
         });
 
         SmartDashboard.putData("Auto Chooser", mAutoChooser);
@@ -336,7 +364,7 @@ public class RobotContainer {
       public SequentialCommandGroup getAutonomousCommand() {
         
         int alliance = 0;
-        if(DriverStation.getAlliance() == Alliance.Red){
+        if(DriverStation.getAlliance() == Alliance.Blue){
           alliance = 0;
         }else{
           alliance = 1;
