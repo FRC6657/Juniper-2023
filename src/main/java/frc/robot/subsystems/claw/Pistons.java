@@ -13,7 +13,7 @@ public class Pistons extends SubsystemBase {
 
 
     public Pistons() {
-        extend();
+        retract();
     }
     
     public void extend() {
