@@ -62,7 +62,7 @@ public class Pivot extends SubsystemBase {
 
     }
 
-    public void autoInit() {
+    public void zeroEncoder() {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
     }
 

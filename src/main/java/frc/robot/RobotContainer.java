@@ -53,7 +53,6 @@ public class RobotContainer {
         ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 2.5, 
         true));
 
-      //Tieu-Tam Controls
       mDriver.y().onTrue(
         new InstantCommand(
           pistons::extend,
@@ -159,7 +158,7 @@ public class RobotContainer {
 
       mOperator.povRight().whileTrue(
         new InstantCommand(
-          pivot::autoInit,
+          pivot::zeroEncoder,
           pivot
         )
       );

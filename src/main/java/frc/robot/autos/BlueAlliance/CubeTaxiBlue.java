@@ -20,14 +20,14 @@ public class CubeTaxiBlue extends SequentialCommandGroup {
     
     public CubeTaxiBlue(Drivetrain drivetrain, Pivot pivot, Arm arm, Pistons pistons, Claw claw) {
         addCommands(
-            new InstantCommand(pivot::autoInit),          
+            new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
                 () -> pivot.changeSetpoint(0)),
             new WaitCommand(3),
             new HybridCube(claw, pivot, arm, pistons),
             drivetrain.followTrajectoryCommand(trajectory, true),
             new InstantCommand(arm::disablePID),
-            new InstantCommand(pivot::autoInit)
+            new InstantCommand(pivot::zeroEncoder)
         );
     }
 }
