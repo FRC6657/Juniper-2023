@@ -178,7 +178,7 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(
         pivot,
         new RunCommand(
-          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mOperator.getLeftY(), 0.2) * 0.3),
+          () -> pivot.trimTargetAngle(deadbander.applyLinearScaledDeadband(-mOperator.getLeftY(), 0.2) * 0.3),
            pivot
         )
       );
@@ -193,25 +193,25 @@ public class RobotContainer {
 
       mOperator.x().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(-12)
+          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.INTAKE.angle)
         )
       );
 
       mOperator.y().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(15)
+          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.ZERO.angle)
         )
       );
 
       mOperator.b().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(30)
+          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SCORE.angle)
         )
       );
 
       mOperator.a().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(50)
+          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SUBSTATION.angle)
         )
       );
 

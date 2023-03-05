@@ -86,10 +86,10 @@ public class Drivetrain extends SubsystemBase {
     mBackRight.setNeutralMode(NeutralMode.Brake);
     mBackLeft.setNeutralMode(NeutralMode.Brake);
 
-    mFrontRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mFrontLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
-    mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 0, 0));
+    mFrontRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0));
+    mFrontLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0));
+    mBackRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0));
+    mBackLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 20, 0));
 
     if(RobotBase.isReal()){
       mFrontRight.setInverted(true);

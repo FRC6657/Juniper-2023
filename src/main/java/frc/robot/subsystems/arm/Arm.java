@@ -38,7 +38,7 @@ public class Arm extends SubsystemBase {
 
         mArm.configVoltageCompSaturation(10);
         mArm.enableVoltageCompensation(true);
-        mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0));
+        mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 10, 0));
 
     }
 

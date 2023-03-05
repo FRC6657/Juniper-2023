@@ -1,6 +1,7 @@
 package frc.robot.subsystems.claw;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,6 +16,16 @@ public class Claw extends SubsystemBase{
         mLeftClaw = new TalonSRX(Constants.CAN.kLeftClaw);
         mRightClaw = new TalonSRX(Constants.CAN.kRightClaw);
 
+    }
+
+    public void configureMotors() {
+
+        mLeftClaw.configFactoryDefault();
+        mRightClaw.configFactoryDefault();
+        
+        mLeftClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
+        mRightClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
+        
     }
 
     public void intake() {

@@ -43,5 +43,27 @@ public final class Constants {
       new Rotation3d()
     );
   }
+
+  public static class PivotConstants {  
+    
+    public static enum SETPOINTS {
+
+      INTAKE(-12), 
+      ZERO(0),
+      CARRY(30), 
+      SCORE(50),
+      SUBSTATION(55),
+      START(66);
+
+     public final int angle;
+
+      private SETPOINTS(int angle) {
+        this.angle = angle;
+      }
+
+    }
+
+  }
+
 }
 

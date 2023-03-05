@@ -25,6 +25,7 @@ public class Pivot extends SubsystemBase {
 
     public double mTargetAngle;
     public double falconOffset;
+    public double trimVal = 0;
 
     public Pivot() {
 
@@ -57,7 +58,7 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle, -20, 80));
+       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle + trimVal, -20, 80));
        mPivot.set(mPIDEffort / 12);
 
     }
@@ -76,8 +77,8 @@ public class Pivot extends SubsystemBase {
 
     }
 
-    public void addToTargetAngle(double value){
-        mTargetAngle += value;
+    public void trimTargetAngle(double value){
+        trimVal = value;
     }
 
     public void ratchetEnable() {
