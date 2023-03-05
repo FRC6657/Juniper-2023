@@ -63,7 +63,7 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
 
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
-      
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

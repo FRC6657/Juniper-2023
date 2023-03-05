@@ -15,13 +15,17 @@ public class Arm extends SubsystemBase {
     private final WPI_TalonFX mArm;
     private final PIDController mPID;
     private double mTargetExtension;
+    
+    boolean PIDEnable;
 
     public Arm() {
 
         mArm = new WPI_TalonFX(Constants.CAN.kArm);
         mArm.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, 0));
         mArm.setInverted(true);
-        mPID = new PIDController(10/4, 0, 0);
+        mPID = new PIDController(20/(Units.inchesToMeters(37)), 0, 0);
+
+        PIDEnable = true;
 
         configureMotor();
 
@@ -38,15 +42,21 @@ public class Arm extends SubsystemBase {
 
     }
 
+    public void set(double val) {
+        mArm.set(val);
+    }
+
     public void changeSetpoint(double setpoint) {
 
-        setpoint = mTargetExtension;
+        mTargetExtension = Units.inchesToMeters(setpoint);
 
     }
+
 
     public void addToSetpoint(double value) {
         mTargetExtension += value;
     }
+
 
     public double getCurrentDistance() {
         return falconToMeters(mArm.getSelectedSensorPosition());
@@ -58,8 +68,18 @@ public class Arm extends SubsystemBase {
 
     public void runArm() {
 
-        double PIDEffort = mPID.calculate(getCurrentDistance(), MathUtil.clamp(mTargetExtension, 0, 4));
-        mArm.set(PIDEffort / 12);
+        if (PIDEnable == true) {
+
+            double PIDEffort = mPID.calculate(getCurrentDistance(), MathUtil.clamp(mTargetExtension, 0, Units.inchesToMeters(35)));
+            mArm.set(PIDEffort / 12);
+
+        }
+
+     }
+
+     public void disablePID() {
+
+        this.PIDEnable = false;
 
      }
 
@@ -75,14 +95,19 @@ public class Arm extends SubsystemBase {
         mArm.set(0);
     }
 
+    public void resetEncoder() {
+        mArm.setSelectedSensorPosition(0);
+    }
+
     @Override
     public void periodic() {
+
+        runArm();
 
         Logger.getInstance().recordOutput("Raw Encoder", mArm.getSelectedSensorPosition());
         Logger.getInstance().recordOutput("Arm Meters", getCurrentDistance());
         Logger.getInstance().recordOutput("Extension Setpoint", mTargetExtension);
-
-        runArm();
+        Logger.getInstance().recordOutput("extention volts", mArm.getMotorOutputVoltage());
     }
 
 }

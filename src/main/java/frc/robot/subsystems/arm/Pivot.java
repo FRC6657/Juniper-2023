@@ -35,7 +35,7 @@ public class Pivot extends SubsystemBase {
         Timer.delay(2);
         mPivot.setInverted(InvertType.InvertMotorOutput);
         mPivot.setSelectedSensorPosition(0);
-        mEncoder.setPositionOffset(0.675);
+        mEncoder.setPositionOffset(0.6789);
         falconOffset = degreeToFalcon(getThroughBoreAngle());
         mPID.setTolerance(1, 5);
 
@@ -57,9 +57,13 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle, 60, -20));
+       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle, -20, 80));
        mPivot.set(mPIDEffort / 12);
 
+    }
+
+    public void autoInit() {
+        falconOffset = degreeToFalcon(getThroughBoreAngle());
     }
 
     public void changeSetpoint(double setpoint) {
@@ -109,7 +113,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public void startConfig() {
-        mTargetAngle = getAngle();
+        mTargetAngle = 66;
     }
 
     @Override

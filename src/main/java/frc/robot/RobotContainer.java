@@ -10,7 +10,6 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.claw.Pistons;
 import frc.robot.subsystems.drive.Drivetrain;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -29,9 +28,6 @@ public class RobotContainer {
 
   private CommandXboxController mDriver = new CommandXboxController(0);
   private CommandXboxController mOperator = new CommandXboxController(1);
-  private CommandXboxController mTieuTam = new CommandXboxController(2);
-  private CommandXboxController mLiam = new CommandXboxController(3);
-
 
   private static final Field2d mField = new Field2d();
 
@@ -52,153 +48,53 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(drivetrain, 
       new DriverControl(drivetrain, 
-        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getRightY(), 0.1) *1.7, 
-        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getRightX(), 0.1) * 1.7, 
-        ()-> deadbander.applyLinearScaledDeadband(-mTieuTam.getLeftX(), 0.1) * 3, 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightY(), 0.1) * 2.5, 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getRightX(), 0.1) * 2.5, 
+        ()-> deadbander.applyLinearScaledDeadband(-mDriver.getLeftX(), 0.1) * 2.5, 
         true));
-    
-      // Resets the gyro, specifically for when field relative driving is on
-      mDriver.x().whileTrue(
-        new InstantCommand(
-          drivetrain::resetGyro, 
-          drivetrain)
-      );
-
-      mOperator.a().whileTrue(
-        new InstantCommand(
-          () -> pivot.changeSetpoint(-10)
-        )
-      );
-
-      mOperator.b().whileTrue(
-        new InstantCommand(
-          () -> pivot.changeSetpoint(0)
-        )
-      );
-
-      mOperator.y().whileTrue(
-        new InstantCommand(
-          () -> pivot.changeSetpoint(30)
-        )
-      );
-
-      mOperator.x().whileTrue(
-        new ParallelCommandGroup(
-          new InstantCommand(
-            pistons::extend,
-            pistons),
-          new InstantCommand(
-            claw::intake,
-            claw
-          )
-        )
-      ).whileFalse(
-          new ParallelCommandGroup(
-            new InstantCommand(
-              pistons::retract, 
-              pistons),
-            new InstantCommand(
-              claw::stop,
-              claw
-            ))
-          );
-
-      mOperator.rightBumper().whileTrue(
-        new InstantCommand(
-          claw::outtake,
-          claw
-        )
-      ).whileFalse(
-        new InstantCommand(
-          claw::stop,
-          claw
-        )
-      );
-
-      mOperator.leftBumper().whileTrue(
-        new InstantCommand(
-          claw::intake,
-          claw
-        )
-      ).whileFalse(
-        new InstantCommand(
-          claw::stop,
-          claw
-        )
-      );
-
-      mOperator.leftTrigger().whileTrue(
-        new InstantCommand(
-          arm::retract,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
-        )
-      );
-      
-      mOperator.rightTrigger().whileTrue(
-        new InstantCommand(
-          arm::extend,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
-        )
-      );
 
       //Tieu-Tam Controls
-      mTieuTam.y().onTrue(
+      mDriver.y().onTrue(
         new InstantCommand(
           pistons::extend,
           pistons
         )
       );
 
-      mTieuTam.x().onTrue(
+      mDriver.x().onTrue(
         new InstantCommand(
           pistons::retract,
           pistons
         )
       );
 
-      mTieuTam.leftTrigger().whileTrue(
+      mDriver.leftBumper().whileTrue(
         new InstantCommand(
-          arm::retract,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
+          () -> arm.changeSetpoint(0)
         )
       );
 
-      mTieuTam.rightTrigger().whileTrue(
+      mDriver.rightBumper().whileTrue(
         new InstantCommand(
-          arm::extend,
-          arm
-        )
-      ).whileFalse(
-        new InstantCommand(
-          arm::stop,
-          arm
+          () -> arm.changeSetpoint(18)
         )
       );
 
-      mTieuTam.b().whileTrue(
+      mDriver.b().whileTrue(
         new InstantCommand(
           drivetrain::resetGyro, 
           drivetrain
         )
       );
 
+      mDriver.a().whileTrue(
+        new InstantCommand(
+          pivot::resetFalcon
+        )
+      );
+
       //Liam controls
-      mLiam.leftBumper().whileTrue(
+      mOperator.leftBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
             pistons::extend,
@@ -222,7 +118,7 @@ public class RobotContainer {
         )
       );
 
-      mLiam.rightBumper().whileTrue(
+      mOperator.rightBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(
             pistons::extend,
@@ -240,62 +136,41 @@ public class RobotContainer {
         )
       );
 
-      mLiam.leftTrigger().whileTrue(
+      mOperator.leftTrigger().whileTrue(
         new InstantCommand(
           pistons::retract,
           pistons
         )
       );
 
-      mLiam.rightTrigger().whileTrue(
+      mOperator.rightTrigger().whileTrue(
         new InstantCommand(
           pistons::extend,
           pistons
         )
       );
 
-      // mLiam.povUp().whileTrue(
-      //   new InstantCommand(
-      //     arm::extend,
-      //     arm
-      //   )
-      // ).whileFalse(
-      //   new InstantCommand(
-      //     arm::stop,
-      //     arm
-      //   )
-      // );
-
-      // mLiam.povDown().whileTrue(
-      //   new InstantCommand(
-      //     arm::retract,
-      //     arm
-      //   )
-      // ).whileFalse(
-      //   new InstantCommand(
-      //     arm::stop,
-      //     arm
-      //   )
-      // );
-
-      mLiam.povUp().whileTrue(
+      mOperator.povLeft().whileTrue(
         new InstantCommand(
-          () -> arm.changeSetpoint(1.5)
+          arm::resetEncoder,
+          arm
         )
       );
 
-      mLiam.povDown().whileTrue(
+      mOperator.povRight().whileTrue(
         new InstantCommand(
-            () -> arm.changeSetpoint(0)
-          ));
+          pivot::autoInit,
+          pivot
+        )
+      );
 
-      mLiam.start().whileTrue(
+      mOperator.start().whileTrue(
         new InstantCommand(
           pivot::ratchetDisable, 
           pivot)
       );
 
-      mLiam.back().whileTrue(
+      mOperator.back().whileTrue(
         new InstantCommand(
           pivot::ratchetEnable, 
           pivot)
@@ -304,37 +179,40 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(
         pivot,
         new RunCommand(
-          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mLiam.getLeftY(), 0.1) * 0.2),
+          () -> pivot.addToTargetAngle(deadbander.applyLinearScaledDeadband(-mOperator.getLeftY(), 0.2) * 0.3),
            pivot
         )
       );
 
-      CommandScheduler.getInstance().setDefaultCommand(
-        arm, 
-        new RunCommand(
-          () -> arm.addToSetpoint(deadbander.applyLinearScaledDeadband(-mLiam.getRightY(), 0.1) * Units.inchesToMeters(3)), 
-          arm));
 
-      mLiam.x().whileTrue(
-        new InstantCommand(
-          () -> pivot.changeSetpoint(-10)
+      arm.setDefaultCommand(
+        new RunCommand(
+          () -> arm.set(deadbander.applyLinearScaledDeadband(-mOperator.getRightY(), 0.1)),
+          arm
         )
       );
 
-      mLiam.b().whileTrue(
+      mOperator.x().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(-12)
+        )
+      );
+
+      mOperator.y().whileTrue(
+        new InstantCommand(
+          () -> pivot.changeSetpoint(15)
+        )
+      );
+
+      mOperator.b().whileTrue(
         new InstantCommand(
           () -> pivot.changeSetpoint(30)
         )
       );
 
-      mLiam.a().whileTrue(
+      mOperator.a().whileTrue(
         new InstantCommand(
           () -> pivot.changeSetpoint(50)
-        )
-      );
-      mLiam.y().whileTrue(
-        new InstantCommand(
-          () -> pivot.changeSetpoint(15)
         )
       );
 
