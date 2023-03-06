@@ -58,13 +58,35 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-       double mPIDEffort = mPID.calculate(getAngle(), MathUtil.clamp(mTargetAngle + trimVal, -20, 80));
-       mPivot.set(mPIDEffort / 12);
+        if(atSetpoint() == true) {
+            ratchetEnable();
+
+            mPivot.set(0);
+
+        }else{
+            ratchetDisable();
+
+            double mPIDEffort = mPID.calculate(
+                getAngle(), 
+                MathUtil.clamp(mTargetAngle + trimVal, -20, 80));
+
+            mPivot.set(mPIDEffort / 12);
+        }
 
     }
 
     public void zeroEncoder() {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
+    }
+
+    public boolean atSetpoint() {
+
+        if(mTargetAngle == getAngle()) {
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     public void changeSetpoint(double setpoint) {
@@ -129,6 +151,7 @@ public class Pivot extends SubsystemBase {
         Logger.getInstance().recordOutput("arm degrees", getAngle());
         Logger.getInstance().recordOutput("TBE angle", getThroughBoreAngle());
         Logger.getInstance().recordOutput("Pivot Volts", mPivot.getMotorOutputVoltage());
+        Logger.getInstance().recordOutput("at setpoint?", atSetpoint());
 
     }
 }
