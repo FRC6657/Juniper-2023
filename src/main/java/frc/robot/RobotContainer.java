@@ -1,7 +1,9 @@
 package frc.robot;
 
 import frc.robot.autos.BlueAlliance.CubeTaxiBlue;
+import frc.robot.autos.BlueAlliance.CubeTaxiCubeBlue;
 import frc.robot.autos.BlueAlliance.TaxiBlue;
+import frc.robot.autos.RedAlliance.CubeTaxiCubeRed;
 import frc.robot.autos.RedAlliance.CubeTaxiRed;
 import frc.robot.autos.RedAlliance.TaxiRed;
 import frc.robot.commands.DriverControl;
@@ -218,7 +220,6 @@ public class RobotContainer {
       configureAutoChooser();
 
       }
-
       
       public void configureAutoChooser() {
 
@@ -232,6 +233,11 @@ public class RobotContainer {
         mAutoChooser.addOption("CubeScoreTaxi", new SequentialCommandGroup[] {
           new CubeTaxiBlue(drivetrain, pivot, arm, pistons, claw),
           new CubeTaxiRed(drivetrain, pivot, arm, pistons, claw)
+        });
+
+        mAutoChooser.addOption("CubeScoreIntakeScore", new SequentialCommandGroup[] {
+          new CubeTaxiCubeBlue(drivetrain, pivot, arm, pistons, claw),
+          new CubeTaxiCubeRed(drivetrain, pivot, arm, pistons, claw)
         });
 
         SmartDashboard.putData("Auto Chooser", mAutoChooser);

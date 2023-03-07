@@ -58,7 +58,7 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-        if(mPID.atSetpoint() == true) {
+        if(atTarget() == true) {
 
             ratchetEnable();
             mPivot.set(0);
@@ -73,6 +73,14 @@ public class Pivot extends SubsystemBase {
             mPivot.set(mPIDEffort / 12);
         }
 
+    }
+
+    public boolean atTarget() {
+        if(mPID.atSetpoint() == true) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void changeSetpoint(double setpoint) {
