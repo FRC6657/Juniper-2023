@@ -25,7 +25,7 @@ public class Arm extends SubsystemBase {
         mArm.setInverted(true);
         mPID = new PIDController(20/(Units.inchesToMeters(37)), 0, 0);
 
-        PIDEnable = false;
+        PIDEnable = true;
 
         configureMotor();
 

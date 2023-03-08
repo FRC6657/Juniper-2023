@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.autos.StartingConfig;
 import frc.robot.autos.BlueAlliance.CubeTaxiBlue;
 import frc.robot.autos.BlueAlliance.CubeTaxiCubeBlue;
 import frc.robot.autos.BlueAlliance.TaxiBlue;
@@ -223,6 +224,11 @@ public class RobotContainer {
       public void configureAutoChooser() {
 
         mAutoChooser.setDefaultOption("Nothing", new SequentialCommandGroup[]{null, null});
+
+        mAutoChooser.addOption("Starting Config", new SequentialCommandGroup[] {
+          new StartingConfig(pivot, arm, pistons),
+          new StartingConfig(pivot, arm, pistons)
+        });
 
         mAutoChooser.addOption("Taxi", new SequentialCommandGroup[] {
           new TaxiBlue(drivetrain),
