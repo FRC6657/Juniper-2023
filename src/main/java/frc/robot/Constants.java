@@ -46,6 +46,8 @@ public final class Constants {
 
   public static class PivotConstants {  
     
+    public static final double throughboreOffset = 0.7648;
+    
     public static enum SETPOINTS {
 
       INTAKE(-12), 

@@ -167,20 +167,19 @@ public class RobotContainer {
 
       mOperator.start().whileTrue(
         new InstantCommand(
-          pivot::ratchetDisable, 
+          pivot::ratchetEnable, 
           pivot)
       );
 
       mOperator.back().whileTrue(
         new InstantCommand(
-          pivot::ratchetEnable, 
+          pivot::ratchetDisable, 
           pivot)
       );
 
-      CommandScheduler.getInstance().setDefaultCommand(
-        pivot,
+      pivot.setDefaultCommand(
         new RunCommand(
-          () -> pivot.trimTargetAngle(deadbander.applyLinearScaledDeadband(-mOperator.getLeftY(), 0.2) * 0.3),
+          () -> pivot.trimTargetAngle(deadbander.applyLinearScaledDeadband(-mOperator.getLeftY(), 0.2) * 5),
            pivot
         )
       );

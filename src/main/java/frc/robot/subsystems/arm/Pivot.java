@@ -33,16 +33,18 @@ public class Pivot extends SubsystemBase {
         mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 6, 7);
         mEncoder = new DutyCycleEncoder(9);
         mPID = new PIDController(32 / 48.2, 0, 0);
+       
         Timer.delay(2);
+        
         mPivot.setInverted(InvertType.InvertMotorOutput);
         mPivot.setSelectedSensorPosition(0);
-        mEncoder.setPositionOffset(0.6789);
+        mEncoder.setPositionOffset(Constants.PivotConstants.throughboreOffset);
         falconOffset = degreeToFalcon(getThroughBoreAngle());
-        mPID.setTolerance(1, 5);
+        mPID.setTolerance(3, 7);
 
         ratchetDisable();
         configureMotor();
-        startConfig();
+        //startConfig();
 
     }
 
@@ -58,10 +60,10 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-        if(atTarget() == true) {
+        if(mPID.atSetpoint() == true) {
 
-            ratchetEnable();
             mPivot.set(0);
+            ratchetEnable();
 
         }else{
             ratchetDisable();
@@ -134,7 +136,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public void startConfig() {
-        mTargetAngle = 66;
+        mTargetAngle = Constants.PivotConstants.SETPOINTS.START.angle;
     }
 
     @Override
