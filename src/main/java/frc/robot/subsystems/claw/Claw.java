@@ -1,6 +1,7 @@
 package frc.robot.subsystems.claw;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,9 @@ public class Claw extends SubsystemBase{
 
         mLeftClaw.configFactoryDefault();
         mRightClaw.configFactoryDefault();
+
+        mLeftClaw.setNeutralMode(NeutralMode.Coast);
+        mRightClaw.setNeutralMode(NeutralMode.Coast);
         
         mLeftClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
         mRightClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));

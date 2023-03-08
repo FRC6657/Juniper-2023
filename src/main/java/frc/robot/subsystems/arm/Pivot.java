@@ -32,7 +32,7 @@ public class Pivot extends SubsystemBase {
         mPivot = new WPI_TalonFX(Constants.CAN.kPivot);
         mSolenoid = new DoubleSolenoid(Constants.CAN.kPCM, PneumaticsModuleType.REVPH, 6, 7);
         mEncoder = new DutyCycleEncoder(9);
-        mPID = new PIDController(32 / 48.2, 0, 0);
+        mPID = new PIDController(2.5 / 3d, 0, 0);
        
         Timer.delay(2);
         
@@ -78,11 +78,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atTarget() {
-        if(mPID.atSetpoint() == true) {
-            return true;
-        }else{
-            return false;
-        }
+
+        double tolerance = 2; 
+
+        return (Math.abs(mTargetAngle + trimVal - getAngle()) < tolerance);
+
     }
 
     public void changeSetpoint(double setpoint) {
@@ -100,11 +100,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void ratchetEnable() {
-        mSolenoid.set(Value.kReverse);
+        mSolenoid.set(Value.kForward);
     }
 
     public void ratchetDisable() {
-        mSolenoid.set(Value.kForward);
+        mSolenoid.set(Value.kReverse);
     }
   
     public void stop() {
