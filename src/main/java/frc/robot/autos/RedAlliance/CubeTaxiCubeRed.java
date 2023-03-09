@@ -35,7 +35,6 @@ public class CubeTaxiCubeRed extends SequentialCommandGroup {
                 new HybridCube(claw, pivot, arm, pistons),
                 drivetrain.followTrajectoryCommand(secondTrajectory, false),
                 new IntakeCube(claw, pivot, arm, pistons),
-                new InstantCommand(arm::disablePID),
                 new InstantCommand(pivot::zeroEncoder)
             );    
         }
