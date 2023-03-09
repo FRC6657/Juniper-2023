@@ -70,18 +70,6 @@ public class RobotContainer {
         )
       );
 
-      mDriver.leftBumper().whileTrue(
-        new InstantCommand(
-          () -> arm.changeSetpoint(0)
-        )
-      );
-
-      mDriver.rightBumper().whileTrue(
-        new InstantCommand(
-          () -> arm.changeSetpoint(18)
-        )
-      );
-
       mDriver.b().whileTrue(
         new InstantCommand(
           drivetrain::resetGyro, 

@@ -44,8 +44,7 @@ public class Pivot extends SubsystemBase {
 
         ratchetDisable();
         configureMotor();
-        //startConfig();
-
+        
     }
 
     public void configureMotor() {
