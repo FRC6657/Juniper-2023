@@ -37,7 +37,7 @@ public final class Constants {
     public static final double kTurboSpeed = 5.5;
     public static final double kNormalSpeed = 2.25;
 
-    public static final double kTurboRotSpeed = 3 * Math.PI / 2;
+    public static final double kTurboRotSpeed = 5 * Math.PI / 2;
     public static final double kNormalRotSpeed = 3 * Math.PI / 2;;
 
   }
@@ -62,7 +62,7 @@ public final class Constants {
       CARRY(30), 
       SINGLE(40),
       DOUBLE(55),
-      START(54); //62 w/ trim of 5
+      START(54);
 
      public final int angle;
 
