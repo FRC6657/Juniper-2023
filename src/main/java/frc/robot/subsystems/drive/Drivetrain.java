@@ -258,6 +258,7 @@ public class Drivetrain extends SubsystemBase {
 
     Optional<EstimatedRobotPose> result = mVision.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
 
+    Logger.getInstance().recordOutput("fL voltage", mFrontLeft.getMotorOutputVoltage());
     if (result.isPresent()) {
       EstimatedRobotPose camPose = result.get();
       Logger.getInstance().recordOutput("Vision Pose", camPose.estimatedPose.toPose2d());

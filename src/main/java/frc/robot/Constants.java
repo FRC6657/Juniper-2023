@@ -34,6 +34,12 @@ public final class Constants {
 
     public static double[] kDrivetrainCharacterization = {kS, kV, kA};
 
+    public static final double kTurboSpeed = 5.5;
+    public static final double kNormalSpeed = 2.25;
+
+    public static final double kTurboRotSpeed = 3 * Math.PI / 2;
+    public static final double kNormalRotSpeed = 3 * Math.PI / 2;;
+
   }
 
   public static class VisionConstants {
@@ -46,16 +52,17 @@ public final class Constants {
 
   public static class PivotConstants {  
     
-    public static final double throughboreOffset = 0.7648;
+    public static final double throughboreOffset = 0.7748;
     
     public static enum SETPOINTS {
 
-      INTAKE(-12), 
+      INTAKE(-15), 
       ZERO(0),
+      AUTO(15),
       CARRY(30), 
-      SCORE(50),
-      SUBSTATION(55),
-      START(66);
+      SINGLE(40),
+      DOUBLE(55),
+      START(54); //62 w/ trim of 5
 
      public final int angle;
 

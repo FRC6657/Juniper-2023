@@ -25,7 +25,7 @@ public class CubeTaxiCubeRed extends SequentialCommandGroup {
                 new InstantCommand(pivot::zeroEncoder),  
                 new InstantCommand(drivetrain::resetGyro),        
                 new InstantCommand(            
-                    () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.ZERO.angle)),
+                    () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
                 new WaitCommand(1),
                 new HybridCube(claw, pivot, arm, pistons),
                 drivetrain.followTrajectoryCommand(startTrajectory, true),

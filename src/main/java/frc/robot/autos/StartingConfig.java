@@ -10,9 +10,6 @@ public class StartingConfig extends SequentialCommandGroup {
     
     public StartingConfig(Pivot pivot, Arm arm, Pistons pistons) {
         addCommands(
-            new InstantCommand(pivot::startConfig),
-            new InstantCommand(pistons::extend)
-        );
-
+            new InstantCommand(pivot::startConfig));
     }
 }

@@ -24,8 +24,8 @@ public class Claw extends SubsystemBase{
         mLeftClaw.configFactoryDefault();
         mRightClaw.configFactoryDefault();
 
-        mLeftClaw.setNeutralMode(NeutralMode.Coast);
-        mRightClaw.setNeutralMode(NeutralMode.Coast);
+        mLeftClaw.setNeutralMode(NeutralMode.Brake);
+        mRightClaw.setNeutralMode(NeutralMode.Brake);
         
         mLeftClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
         mRightClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
@@ -33,13 +33,13 @@ public class Claw extends SubsystemBase{
     }
 
     public void intake() {
-        mLeftClaw.set(ControlMode.PercentOutput, -0.4);
-        mRightClaw.set(ControlMode.PercentOutput, 0.4);
+        mLeftClaw.set(ControlMode.PercentOutput, -0.3);
+        mRightClaw.set(ControlMode.PercentOutput, 0.3);
     }
 
     public void outtake() {
-        mLeftClaw.set(ControlMode.PercentOutput,0.4);
-        mRightClaw.set(ControlMode.PercentOutput,-0.4);
+        mLeftClaw.set(ControlMode.PercentOutput,0.2);
+        mRightClaw.set(ControlMode.PercentOutput,-0.2);
     }
 
     public void stop() {

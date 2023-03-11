@@ -23,7 +23,7 @@ public class Pivot extends SubsystemBase {
     private final DutyCycleEncoder mEncoder;
     private final PIDController mPID;
 
-    public double mTargetAngle;
+    public double mTargetAngle = Constants.PivotConstants.SETPOINTS.START.angle;
     public double falconOffset;
     public double trimVal = 0;
 
@@ -42,7 +42,6 @@ public class Pivot extends SubsystemBase {
         falconOffset = degreeToFalcon(getThroughBoreAngle());
         mPID.setTolerance(3, 7);
 
-        ratchetDisable();
         configureMotor();
         
     }
@@ -59,7 +58,7 @@ public class Pivot extends SubsystemBase {
 
     public void runPivot() {
 
-        if(mPID.atSetpoint() == true) {
+        if(atTarget()) {
 
             mPivot.set(0);
             ratchetEnable();
@@ -67,29 +66,26 @@ public class Pivot extends SubsystemBase {
         }else{
             ratchetDisable();
 
+            Timer.delay(0.1);
+
             double mPIDEffort = mPID.calculate(
                 getAngle(), 
                 MathUtil.clamp(mTargetAngle + trimVal, -20, 80));
 
             mPivot.set(mPIDEffort / 12);
         }
-
     }
 
     public boolean atTarget() {
 
         double tolerance = 2; 
 
-        return (Math.abs(mTargetAngle + trimVal - getAngle()) < tolerance);
+        return (Math.abs(getAngle() - mTargetAngle + trimVal) < tolerance);
 
     }
 
     public void changeSetpoint(double setpoint) {
-
-        if (setpoint < getAngle()) {
-            ratchetDisable();
-        }
-
+        
         mTargetAngle = setpoint;
 
     }
@@ -97,6 +93,7 @@ public class Pivot extends SubsystemBase {
     public void trimTargetAngle(double value){
         trimVal = value;
     }
+
 
     public void ratchetEnable() {
         mSolenoid.set(Value.kForward);
@@ -115,6 +112,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public void zeroEncoder() {
+        mPivot.setSelectedSensorPosition(0);
         falconOffset = degreeToFalcon(getThroughBoreAngle());
     }
 
@@ -150,7 +148,7 @@ public class Pivot extends SubsystemBase {
         Logger.getInstance().recordOutput("arm degrees", getAngle());
         Logger.getInstance().recordOutput("TBE angle", getThroughBoreAngle());
         Logger.getInstance().recordOutput("Pivot Volts", mPivot.getMotorOutputVoltage());
-        Logger.getInstance().recordOutput("at setpoint?", mPID.atSetpoint());
+        Logger.getInstance().recordOutput("at setpoint?", atTarget());
 
     }
 }
