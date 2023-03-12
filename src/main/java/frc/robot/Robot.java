@@ -35,7 +35,7 @@ public class Robot extends LoggedRobot {
            break;
        }
 
-       logger.addDataReceiver(new WPILOGWriter(""));
+       logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
        logger.addDataReceiver(new NT4Publisher());
 
     logger.start();

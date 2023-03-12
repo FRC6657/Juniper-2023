@@ -6,6 +6,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.autos.common.HybridCube;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Pivot;
@@ -21,7 +22,7 @@ public class CubeTaxiBlue extends SequentialCommandGroup {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
-                () -> pivot.changeSetpoint(0)),
+                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
             new WaitCommand(3),
             new HybridCube(claw, pivot, arm, pistons),
             drivetrain.followTrajectoryCommand(trajectory, true)

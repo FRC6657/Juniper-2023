@@ -57,8 +57,8 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
 
-        Logger.getInstance().recordOutput("Raw Encoder", mArm.getSelectedSensorPosition());
-        Logger.getInstance().recordOutput("extention volts", mArm.getMotorOutputVoltage());
+        Logger.getInstance().recordOutput("Arm/Raw Encoder", mArm.getSelectedSensorPosition());
+        Logger.getInstance().recordOutput("Arm/extention volts", mArm.getMotorOutputVoltage());
 
     }
 

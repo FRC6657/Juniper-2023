@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -26,6 +25,8 @@ public class Pivot extends SubsystemBase {
     public double mTargetAngle = Constants.PivotConstants.SETPOINTS.START.angle;
     public double falconOffset;
     public double trimVal = 0;
+
+    public boolean firstRun = true; 
 
     public Pivot() {
 
@@ -62,17 +63,22 @@ public class Pivot extends SubsystemBase {
 
             mPivot.set(0);
             ratchetEnable();
+            firstRun = true;
 
         }else{
             ratchetDisable();
 
-            Timer.delay(0.1);
+            if(firstRun) {
+                Timer.delay(0.1);
+            }
 
             double mPIDEffort = mPID.calculate(
                 getAngle(), 
                 MathUtil.clamp(mTargetAngle + trimVal, -20, 80));
 
             mPivot.set(mPIDEffort / 12);
+        
+            firstRun = false;
         }
     }
 
@@ -141,14 +147,14 @@ public class Pivot extends SubsystemBase {
 
         runPivot();
 
-        SmartDashboard.putNumber("setpoint", mTargetAngle);
-        Logger.getInstance().recordOutput("TBE raw", mEncoder.getAbsolutePosition());
-        Logger.getInstance().recordOutput("TBE corrected", mEncoder.getAbsolutePosition() - mEncoder.getPositionOffset());
-        Logger.getInstance().recordOutput("target angle", mTargetAngle);
-        Logger.getInstance().recordOutput("arm degrees", getAngle());
-        Logger.getInstance().recordOutput("TBE angle", getThroughBoreAngle());
-        Logger.getInstance().recordOutput("Pivot Volts", mPivot.getMotorOutputVoltage());
-        Logger.getInstance().recordOutput("at setpoint?", atTarget());
+      
+        Logger.getInstance().recordOutput("Pivot/TBE raw", mEncoder.getAbsolutePosition());
+        Logger.getInstance().recordOutput("Pivot/TBE corrected", mEncoder.getAbsolutePosition() - mEncoder.getPositionOffset());
+        Logger.getInstance().recordOutput("Pivot/target angle", mTargetAngle);
+        Logger.getInstance().recordOutput("Pivot/arm degrees", getAngle());
+        Logger.getInstance().recordOutput("Pivot/TBE angle", getThroughBoreAngle());
+        Logger.getInstance().recordOutput("Pivot/Pivot Volts", mPivot.getMotorOutputVoltage());
+        Logger.getInstance().recordOutput("Pivot/at setpoint?", atTarget());
 
     }
 }

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.autos.StartingConfig;
+import frc.robot.autos.BlueAlliance.BlueCubeTaxiBump;
 import frc.robot.autos.BlueAlliance.BlueShoot;
 import frc.robot.autos.BlueAlliance.CubeTaxiBlue;
 import frc.robot.autos.BlueAlliance.CubeTaxiCubeBlue;
@@ -144,16 +145,10 @@ public class RobotContainer {
           () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.START.angle))
       );
 
-      mOperator.start().whileTrue(
+      mOperator.povDown().whileTrue(
         new InstantCommand(
-          pivot::ratchetEnable, 
-          pivot)
-      );
-
-      mOperator.back().whileTrue(
-        new InstantCommand(
-          pivot::ratchetDisable, 
-          pivot)
+          pivot::zeroEncoder
+        )
       );
 
       pivot.setDefaultCommand(
@@ -229,7 +224,7 @@ public class RobotContainer {
         });
 
         mAutoChooser.addOption("Bump Shoot Taxi ", new SequentialCommandGroup[] {
-          null,
+          new BlueCubeTaxiBump(drivetrain, pivot, arm, pistons, claw),
           new RedCubeTaxiBump(drivetrain, pivot, arm, pistons, claw)
         });
 

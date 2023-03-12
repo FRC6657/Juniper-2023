@@ -28,6 +28,7 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -152,6 +153,9 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     updateOdometry();
     mField.setRobotPose(getPose());
+
+    Logger.getInstance().recordOutput("Robot/BatteryVoltage", RobotController.getBatteryVoltage());
+
   }
 
   public void resetGyro() {
