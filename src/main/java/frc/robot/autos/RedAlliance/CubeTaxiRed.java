@@ -37,8 +37,7 @@ public class CubeTaxiRed extends SequentialCommandGroup {
                 new InstantCommand(
                     claw::intake,
                     claw
-                )
-                ),
+                )),
             drivetrain.followTrajectoryCommand(trajectory, true)),
             new InstantCommand(
                 pistons::retract,

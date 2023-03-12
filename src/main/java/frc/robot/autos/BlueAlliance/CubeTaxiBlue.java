@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -25,6 +26,27 @@ public class CubeTaxiBlue extends SequentialCommandGroup {
                 () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
             new WaitCommand(3),
             new HybridCube(claw, pivot, arm, pistons),
+            new InstantCommand(
+                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.INTAKE.angle)
+            ),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new InstantCommand(
+                    pistons::extend,
+                    pistons
+                ),
+                new InstantCommand(
+                    claw::intake,
+                    claw
+                )),
+            drivetrain.followTrajectoryCommand(trajectory, true)),
+                new InstantCommand(
+                    pistons::retract,
+                    pistons),
+                new InstantCommand(
+                    claw::stop,
+                    claw),
+                new InstantCommand(pivot::zeroEncoder),
             drivetrain.followTrajectoryCommand(trajectory, true)
         );
     }
