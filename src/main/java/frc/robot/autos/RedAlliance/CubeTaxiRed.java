@@ -43,7 +43,7 @@ public class CubeTaxiRed extends SequentialCommandGroup {
                 pistons::retract,
                 pistons),
             new InstantCommand(
-                claw::stop,
+                claw::idle,
                 claw),
             new InstantCommand(pivot::zeroEncoder)
         );

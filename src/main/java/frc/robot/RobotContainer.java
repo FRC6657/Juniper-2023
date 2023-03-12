@@ -86,6 +86,20 @@ public class RobotContainer {
           pivot::zeroEncoder)
       );
 
+      mDriver.rightBumper().whileTrue(
+        new InstantCommand(
+          claw::idle,
+          claw
+        )
+      );
+
+      mDriver.leftBumper().whileTrue(
+        new InstantCommand(
+          claw::stop,
+          claw
+        )
+      );
+
       mOperator.leftBumper().whileTrue(
         new SequentialCommandGroup(
           new InstantCommand(

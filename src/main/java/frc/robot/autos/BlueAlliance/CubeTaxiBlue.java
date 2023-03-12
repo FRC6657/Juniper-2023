@@ -44,7 +44,7 @@ public class CubeTaxiBlue extends SequentialCommandGroup {
                     pistons::retract,
                     pistons),
                 new InstantCommand(
-                    claw::stop,
+                    claw::idle,
                     claw),
                 new InstantCommand(pivot::zeroEncoder),
             drivetrain.followTrajectoryCommand(trajectory, true)
