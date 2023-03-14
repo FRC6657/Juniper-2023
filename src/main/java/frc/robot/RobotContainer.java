@@ -88,15 +88,7 @@ public class RobotContainer {
 
       mDriver.rightBumper().whileTrue(
         new InstantCommand(
-          claw::idle,
-          claw
-        )
-      );
-
-      mDriver.leftBumper().whileTrue(
-        new InstantCommand(
-          claw::stop,
-          claw
+          claw::stop
         )
       );
 
@@ -118,7 +110,7 @@ public class RobotContainer {
             pistons
           ),
           new InstantCommand(
-            claw::stop,
+            claw::idle,
             claw
           )
         )
@@ -137,7 +129,7 @@ public class RobotContainer {
         )
       ).whileFalse(
         new InstantCommand(
-          claw::stop,
+          claw::idle,
           claw
         )
       );

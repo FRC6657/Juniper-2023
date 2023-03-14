@@ -46,8 +46,9 @@ public class CubeTaxiBlue extends SequentialCommandGroup {
                 new InstantCommand(
                     claw::idle,
                     claw),
-                new InstantCommand(pivot::zeroEncoder),
-            drivetrain.followTrajectoryCommand(trajectory, true)
+                new InstantCommand(            
+                        () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
+                new InstantCommand(pivot::zeroEncoder)
         );
     }
 }
