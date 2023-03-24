@@ -50,6 +50,22 @@ public final class Constants {
     );
   }
 
+  public static class IntakeConstants{
+
+    public static enum STATE {
+      
+      INTAKE(0.3),
+      OUTTAKE(0.2),
+      IDLE(0.08);
+
+      public final double speed;
+
+      private STATE(double speed) {
+        this.speed = speed;
+      }
+    }
+  }
+
   public static class PivotConstants {  
     
     public static final double throughboreOffset = 0.7748;

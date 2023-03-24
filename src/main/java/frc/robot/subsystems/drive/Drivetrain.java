@@ -3,10 +3,8 @@ package frc.robot.subsystems.drive;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;

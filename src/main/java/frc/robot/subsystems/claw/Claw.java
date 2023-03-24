@@ -1,6 +1,7 @@
 package frc.robot.subsystems.claw;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -30,23 +31,23 @@ public class Claw extends SubsystemBase{
         mLeftClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
         mRightClaw.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 25, 0));
         
+        mRightClaw.setInverted(InvertType.InvertMotorOutput);
+
     }
 
     public void intake() {
-        mLeftClaw.set(ControlMode.PercentOutput, -0.3);
-        mRightClaw.set(ControlMode.PercentOutput, 0.3);
+        mLeftClaw.set(ControlMode.PercentOutput, Constants.IntakeConstants.STATE.INTAKE.speed);
+        mRightClaw.set(ControlMode.PercentOutput, Constants.IntakeConstants.STATE.INTAKE.speed);
     }
 
     public void outtake() {
-        mLeftClaw.set(ControlMode.PercentOutput,0.2);
-        mRightClaw.set(ControlMode.PercentOutput,-0.2);
+        mLeftClaw.set(ControlMode.PercentOutput, Constants.IntakeConstants.STATE.OUTTAKE.speed);
+        mRightClaw.set(ControlMode.PercentOutput, Constants.IntakeConstants.STATE.OUTTAKE.speed);
     }
 
     public void idle() {
-        
-        mLeftClaw.set(ControlMode.PercentOutput,-0.08);
-        mRightClaw.set(ControlMode.PercentOutput, 0.08);
-        
+        mLeftClaw.set(ControlMode.PercentOutput,Constants.IntakeConstants.STATE.IDLE.speed);
+        mRightClaw.set(ControlMode.PercentOutput, Constants.IntakeConstants.STATE.IDLE.speed);
     }
 
     public void stop() {
