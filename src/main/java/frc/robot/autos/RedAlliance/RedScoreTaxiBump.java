@@ -1,4 +1,4 @@
-package frc.robot.autos.BlueAlliance;
+package frc.robot.autos.RedAlliance;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import com.pathplanner.lib.PathConstraints;
@@ -13,11 +13,11 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class BlueCubeTaxiBump extends SequentialCommandGroup {
+public class RedScoreTaxiBump extends SequentialCommandGroup {
     
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Blue Taxi Bump", new PathConstraints(3, 3));
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Red Taxi Bump", new PathConstraints(3, 3));
 
-    public BlueCubeTaxiBump(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
+    public RedScoreTaxiBump(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
@@ -26,7 +26,5 @@ public class BlueCubeTaxiBump extends SequentialCommandGroup {
             new HybridCube(claw, pivot, arm),
             drivetrain.followTrajectoryCommand(trajectory, true)
         );
- 
     }
-
 }

@@ -15,11 +15,11 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class CubeTaxiBlue extends SequentialCommandGroup {
+public class BlueScoreTaxi extends SequentialCommandGroup {
     
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Blue Taxi", new PathConstraints(3, 3));
     
-    public CubeTaxiBlue(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
+    public BlueScoreTaxi(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
