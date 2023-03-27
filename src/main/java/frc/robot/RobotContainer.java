@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.Constants.IntakeConstants.STATE;
 import frc.robot.autos.StartingConfig;
 import frc.robot.autos.BlueAlliance.BlueCubeTaxiBump;
 import frc.robot.autos.BlueAlliance.BlueShoot;
@@ -15,7 +16,6 @@ import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
-import frc.robot.subsystems.claw.Pistons;
 import frc.robot.subsystems.drive.Drivetrain;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -40,7 +40,6 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Arm arm = new Arm();
-  private final Pistons pistons = new Pistons();
   private final Claw claw = new Claw();
   private final Pivot pivot = new Pivot();
 
@@ -61,17 +60,11 @@ public class RobotContainer {
         true));
 
       mDriver.y().onTrue(
-        new InstantCommand(
-          pistons::extend,
-          pistons
-        )
+        claw.changeState(STATE.EXTEND)
       );
 
       mDriver.x().onTrue(
-        new InstantCommand(
-          pistons::retract,
-          pistons
-        )
+        claw.changeState(STATE.RETRACT)
       );
 
       mDriver.b().whileTrue(
@@ -87,63 +80,27 @@ public class RobotContainer {
       );
 
       mDriver.rightBumper().whileTrue(
-        new InstantCommand(
-          claw::stop
-        )
+        claw.changeState(STATE.STOP)
       );
 
       mOperator.leftBumper().whileTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pistons::extend,
-            pistons
-          ),
-          new InstantCommand(
-            claw::intake,
-            claw
-          )
-        )
+        claw.changeState(STATE.GRAB)
       ).whileFalse(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pistons::retract,
-            pistons
-          ),
-          new InstantCommand(
-            claw::idle,
-            claw
-          )
-        )
+        claw.changeState(STATE.CLAMP)
       );
 
       mOperator.rightBumper().whileTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            pistons::extend,
-            pistons
-          ),
-          new InstantCommand(
-            claw::outtake,
-            claw
-          )
-        )
+        claw.changeState(STATE.OUTTAKE)
       ).whileFalse(
-        new InstantCommand(
-          claw::idle,
-          claw
-        )
+        claw.changeState(STATE.IDLE)
       );
 
       mOperator.leftTrigger().whileTrue(
-        new InstantCommand(
-          claw::intake
-        )
+        claw.changeState(STATE.EXTEND)
       );
 
       mOperator.rightTrigger().whileTrue(
-        new InstantCommand(
-          claw::outtake
-        )
+        claw.changeState(STATE.OUTTAKE)
       );
 
       mOperator.povRight().whileTrue(
@@ -205,8 +162,8 @@ public class RobotContainer {
         mAutoChooser.setDefaultOption("Nothing", new SequentialCommandGroup[]{null, null});
 
         mAutoChooser.addOption("Starting Config", new SequentialCommandGroup[] {
-          new StartingConfig(pivot, arm, pistons),
-          new StartingConfig(pivot, arm, pistons)
+          new StartingConfig(pivot, arm),
+          new StartingConfig(pivot, arm)
         });
 
         mAutoChooser.addOption("Taxi", new SequentialCommandGroup[] {
@@ -215,23 +172,23 @@ public class RobotContainer {
         });
 
         mAutoChooser.addOption("CubeScoreTaxi", new SequentialCommandGroup[] {
-          new CubeTaxiBlue(drivetrain, pivot, arm, pistons, claw),
-          new CubeTaxiRed(drivetrain, pivot, arm, pistons, claw)
+          new CubeTaxiBlue(drivetrain, pivot, arm, claw),
+          new CubeTaxiRed(drivetrain, pivot, arm, claw)
         });
 
         mAutoChooser.addOption("CubeScoreIntakeScore", new SequentialCommandGroup[] {
-          new CubeTaxiCubeBlue(drivetrain, pivot, arm, pistons, claw),
-          new CubeTaxiCubeRed(drivetrain, pivot, arm, pistons, claw)
+          new CubeTaxiCubeBlue(drivetrain, pivot, arm, claw),
+          new CubeTaxiCubeRed(drivetrain, pivot, arm, claw)
         });
 
         mAutoChooser.addOption("Shoot", new SequentialCommandGroup[] {
-          new BlueShoot(pivot, arm, pistons, claw),
-          new RedShoot(pivot, arm, pistons, claw)
+          new BlueShoot(pivot, arm, claw),
+          new RedShoot(pivot, arm, claw)
         });
 
         mAutoChooser.addOption("Bump Shoot Taxi ", new SequentialCommandGroup[] {
-          new BlueCubeTaxiBump(drivetrain, pivot, arm, pistons, claw),
-          new RedCubeTaxiBump(drivetrain, pivot, arm, pistons, claw)
+          new BlueCubeTaxiBump(drivetrain, pivot, arm, claw),
+          new RedCubeTaxiBump(drivetrain, pivot, arm, claw)
         });
 
 
@@ -260,7 +217,7 @@ public class RobotContainer {
           new InstantCommand(pivot::stop),
           new InstantCommand(arm::stop),
           new InstantCommand(drivetrain::stop),
-          new InstantCommand(claw::stop)
+          claw.changeState(STATE.STOP)
         );
       };
     }

@@ -8,16 +8,15 @@ import frc.robot.autos.common.HybridCube;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
-import frc.robot.subsystems.claw.Pistons;
 
 public class BlueShoot extends SequentialCommandGroup {
         
-    public BlueShoot (Pivot pivot, Arm arm, Pistons pistons, Claw claw) {
+    public BlueShoot (Pivot pivot, Arm arm, Claw claw) {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
                 () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
             new WaitCommand(3),
-            new HybridCube(claw, pivot, arm, pistons)       );
+            new HybridCube(claw, pivot, arm));
     }
 }

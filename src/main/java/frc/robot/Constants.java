@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public final class Constants {
 
@@ -54,17 +55,25 @@ public final class Constants {
 
     public static enum STATE {
       
-      INTAKE(0.3),
-      OUTTAKE(0.2),
-      IDLE(0.08);
+      GRAB(Value.kForward, 0.3),
+      CLAMP(Value.kReverse, 0.08),
+      OUTTAKE(Value.kForward, 0.2),
+      IDLE(Value.kReverse, 0.08),
+      STOP(Value.kReverse, 0),
+      STARTING(Value.kForward, 0),
+      EXTEND(Value.kForward, 0.08),
+      RETRACT(Value.kReverse, 0.08);
 
       public final double speed;
+      public final Value value;
 
-      private STATE(double speed) {
+      private STATE(Value value, double speed) {
+        this.value = value;
         this.speed = speed;
       }
     }
   }
+
 
   public static class PivotConstants {  
     
