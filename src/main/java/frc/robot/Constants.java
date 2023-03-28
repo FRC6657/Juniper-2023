@@ -82,10 +82,11 @@ public final class Constants {
     public static enum SETPOINTS {
 
       INTAKE(-15), 
+      HYBRID(-10),
       ZERO(0),
       AUTO(15),
       CARRY(30), 
-      SINGLE(40),
+      MID(40),
       DOUBLE(55),
       START(54);
 

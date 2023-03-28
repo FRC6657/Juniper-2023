@@ -13,15 +13,15 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class RedScoreTaxiBump extends SequentialCommandGroup {
+public class RedMidTaxiBump extends SequentialCommandGroup {
     
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Red Taxi Bump", new PathConstraints(3, 3));
 
-    public RedScoreTaxiBump(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
+    public RedMidTaxiBump(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
-                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
+                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.MID.angle)),
             new WaitCommand(3),
             new HybridCube(claw, pivot, arm),
             drivetrain.followTrajectoryCommand(trajectory, true)

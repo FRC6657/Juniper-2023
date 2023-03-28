@@ -2,15 +2,15 @@ package frc.robot;
 
 import frc.robot.Constants.IntakeConstants.STATE;
 import frc.robot.autos.StartingConfig;
-import frc.robot.autos.BlueAlliance.BlueTaxiBump;
-import frc.robot.autos.BlueAlliance.BlueShoot;
-import frc.robot.autos.BlueAlliance.BlueScoreTaxi;
-import frc.robot.autos.BlueAlliance.BlueScoreTaxiGrab;
+import frc.robot.autos.BlueAlliance.BlueMidTaxiBump;
+import frc.robot.autos.BlueAlliance.BlueMid;
+import frc.robot.autos.BlueAlliance.BlueMidTaxi;
+import frc.robot.autos.BlueAlliance.BlueMidTaxiGrab;
 import frc.robot.autos.BlueAlliance.BlueTaxi;
-import frc.robot.autos.RedAlliance.RedScoreTaxiGrab;
-import frc.robot.autos.RedAlliance.RedScoreTaxi;
-import frc.robot.autos.RedAlliance.RedScoreTaxiBump;
-import frc.robot.autos.RedAlliance.RedShoot;
+import frc.robot.autos.RedAlliance.RedMidTaxiGrab;
+import frc.robot.autos.RedAlliance.RedMidTaxi;
+import frc.robot.autos.RedAlliance.RedMidTaxiBump;
+import frc.robot.autos.RedAlliance.RedMid;
 import frc.robot.autos.RedAlliance.RedTaxi;
 import frc.robot.commands.DriverControl;
 import frc.robot.subsystems.arm.Arm;
@@ -149,7 +149,7 @@ public class RobotContainer {
 
       mOperator.a().whileTrue(
         new InstantCommand(
-          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)
+          () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.MID.angle)
         )
       );
 
@@ -172,23 +172,23 @@ public class RobotContainer {
         });
 
         mAutoChooser.addOption("CubeScoreTaxi", new SequentialCommandGroup[] {
-          new BlueScoreTaxi(drivetrain, pivot, arm, claw),
-          new RedScoreTaxi(drivetrain, pivot, arm, claw)
+          new BlueMidTaxi(drivetrain, pivot, arm, claw),
+          new RedMidTaxi(drivetrain, pivot, arm, claw)
         });
 
         mAutoChooser.addOption("CubeScoreIntakeScore", new SequentialCommandGroup[] {
-          new BlueScoreTaxiGrab(drivetrain, pivot, arm, claw),
-          new RedScoreTaxiGrab(drivetrain, pivot, arm, claw)
+          new BlueMidTaxiGrab(drivetrain, pivot, arm, claw),
+          new RedMidTaxiGrab(drivetrain, pivot, arm, claw)
         });
 
         mAutoChooser.addOption("Shoot", new SequentialCommandGroup[] {
-          new BlueShoot(pivot, arm, claw),
-          new RedShoot(pivot, arm, claw)
+          new BlueMid(pivot, arm, claw),
+          new RedMid(pivot, arm, claw)
         });
 
         mAutoChooser.addOption("Bump Shoot Taxi ", new SequentialCommandGroup[] {
-          new BlueTaxiBump(drivetrain, pivot, arm, claw),
-          new RedScoreTaxiBump(drivetrain, pivot, arm, claw)
+          new BlueMidTaxiBump(drivetrain, pivot, arm, claw),
+          new RedMidTaxiBump(drivetrain, pivot, arm, claw)
         });
 
 

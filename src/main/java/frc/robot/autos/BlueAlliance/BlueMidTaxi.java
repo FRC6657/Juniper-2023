@@ -15,15 +15,15 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class BlueScoreTaxi extends SequentialCommandGroup {
+public class BlueMidTaxi extends SequentialCommandGroup {
     
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Blue Taxi", new PathConstraints(3, 3));
     
-    public BlueScoreTaxi(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
+    public BlueMidTaxi(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
         addCommands(
             new InstantCommand(pivot::zeroEncoder),          
             new InstantCommand(            
-                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
+                () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.MID.angle)),
             new WaitCommand(3),
             new HybridCube(claw, pivot, arm),
             new InstantCommand(
@@ -33,7 +33,7 @@ public class BlueScoreTaxi extends SequentialCommandGroup {
             drivetrain.followTrajectoryCommand(trajectory, true),
                 claw.changeState(STATE.IDLE),
                 new InstantCommand(            
-                        () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
+                    () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.MID.angle)),
                 new InstantCommand(pivot::zeroEncoder));
     }
 }

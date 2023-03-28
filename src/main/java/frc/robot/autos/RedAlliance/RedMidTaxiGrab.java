@@ -14,17 +14,17 @@ import frc.robot.subsystems.arm.Pivot;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drive.Drivetrain;
 
-public class RedScoreTaxiGrab extends SequentialCommandGroup {
+public class RedMidTaxiGrab extends SequentialCommandGroup {
 
         PathPlannerTrajectory startTrajectory = PathPlanner.loadPath("Red Taxi", new PathConstraints(3, 3));
         PathPlannerTrajectory secondTrajectory = PathPlanner.loadPath("Red Intake Cube", new PathConstraints(3, 3));
     
-        public RedScoreTaxiGrab(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
+        public RedMidTaxiGrab(Drivetrain drivetrain, Pivot pivot, Arm arm, Claw claw) {
             addCommands(
                 new InstantCommand(pivot::zeroEncoder),  
                 new InstantCommand(drivetrain::resetGyro),        
                 new InstantCommand(            
-                    () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.SINGLE.angle)),
+                    () -> pivot.changeSetpoint(Constants.PivotConstants.SETPOINTS.HYBRID.angle)),
                 new WaitCommand(1),
                 new HybridCube(claw, pivot, arm),
                 drivetrain.followTrajectoryCommand(startTrajectory, true),
